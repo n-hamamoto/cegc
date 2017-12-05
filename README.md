@@ -14,19 +14,22 @@
 
 設定は，confディレクトリ内にあります。
 conf/config.phpの以下のパラメータを設定します。
-
+<pre>
 $dbhost = '';           #データベースのホスト名，または，IPアドレス
 $dbuser = '';           #データベースにアクセスするためのユーザ名
 $dbpassword = '';       #データベースにアクセスするためのパスワード
 $logdb   = '';          #データベース名
 $inituser = '';         #最初に作るユーザ
+</pre>
 
 IdPでのedupersonTargetedIDがcomputedIDかstoredIDかを指定してください。
-# 0: computedID, 1: storedID
-$sw = 0;
-
+<pre>
+$sw = 0; # 0: computedID, 1: storedID
+</pre>
 computedIDの場合にはsaltが必要となります。
+<pre>
 $salt = "";
+</pre>
 
 storedIDの場合には，eduPersonTargetedID（persistent-id）が登録されているDBへのアクセス情報を記載してください。
 $idpdbhost   = '';      #idpのホスト名
