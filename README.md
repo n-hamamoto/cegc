@@ -12,3 +12,25 @@
 
 ## Install
 
+設定は，confディレクトリ内にあります。
+conf/config.phpの以下のパラメータを設定します。
+
+$dbhost = '';           #データベースのホスト名，または，IPアドレス
+$dbuser = '';           #データベースにアクセスするためのユーザ名
+$dbpassword = '';       #データベースにアクセスするためのパスワード
+$logdb   = '';          #データベース名
+$inituser = '';         #最初に作るユーザ
+
+IdPでのedupersonTargetedIDがcomputedIDかstoredIDかを指定してください。
+# 0: computedID, 1: storedID
+$sw = 0;
+
+computedIDの場合にはsaltが必要となります。
+$salt = "";
+
+storedIDの場合には，eduPersonTargetedID（persistent-id）が登録されているDBへのアクセス情報を記載してください。
+$idpdbhost   = '';      #idpのホスト名
+$idpdbuser   = '';      #データベースにアクセスするためのユーザ名
+$idpdbpassword   = '';  #データベースにアクセスするためのパスワード
+$idpdb = '';            #データベース名
+
