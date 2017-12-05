@@ -32,8 +32,12 @@ $salt = "";
 </pre>
 
 storedIDの場合には，eduPersonTargetedID（persistent-id）が登録されているDBへのアクセス情報を記載してください。
+<pre>
 $idpdbhost   = '';      #idpのホスト名
 $idpdbuser   = '';      #データベースにアクセスするためのユーザ名
 $idpdbpassword   = '';  #データベースにアクセスするためのパスワード
 $idpdb = '';            #データベース名
+</pre>
+
+
 
