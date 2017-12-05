@@ -11,15 +11,14 @@
 また，各大学内のIdPと連携してshibboleth SPとして動作することを前提としています。
 
 インストールディレクトリ配下のsecureをshibbolethでアクセス保護するようapache等の設定を行ってください。
-<pre>
-<code>
+<code><pre>
 <Location /secure>
   AuthType shibboleth
   ShibRequestSetting requireSession 1
   Require valid-user
 </Location>
-</code>
-</pre>
+</pre></code>
+
 
 ## Install
 
