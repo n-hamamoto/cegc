@@ -12,13 +12,12 @@
 
 インストールディレクトリ配下のsecureをshibbolethでアクセス保護するようapache等の設定を行ってください。
 
-`<Location /secure>`
-<pre>
+`<Location /secure>
   AuthType shibboleth
   ShibRequestSetting requireSession 1
   Require valid-user
   </pre>
-`</Location>`
+</Location>`
 
 
 ## Install
