@@ -31,7 +31,7 @@ computedIDの場合にはsaltが必要となります。
 $salt = "";
 </pre>
 
-storedIDの場合には，eduPersonTargetedID（persistent-id）が登録されているDBへのアクセス情報を記載してください。
+storedIDの場合には，eduPersonTargetedID（persistent-id）が登録されているDBへのアクセス情報を記載してください。idpでは，本システムから，リモートでmysqlのテーブルを検索できるようあらかじめ設定しておいてください。
 <pre>
 $idpdbhost   = '';      #idpのホスト名
 $idpdbuser   = '';      #データベースにアクセスするためのユーザ名
