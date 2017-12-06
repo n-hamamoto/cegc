@@ -1,0 +1,28 @@
+@charset "utf-8";
+
+/* ---------- font ---------- */
+
+body{
+ font-family:'Lucida Grande', Meiryo, 'ＭＳ Ｐゴシック', sans-serif;
+ font-size:0.88em;
+ line-height:1.6em;
+ color:#333333;
+}
+
+a:link{
+ color:#333333;
+ text-decoration:underline;
+ transition: color 0.1s linear 0, background-color 0.1s linear 0;
+}
+a:visited{
+ color:#333333;
+ text-decoration:underline;
+}
+a:active{
+ color:#333333;
+ text-decoration:underline;
+}
+a:hover{
+ color:#333333;
+ text-decoration:underline;
+}

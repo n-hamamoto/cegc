@@ -1,0 +1,206 @@
+div#login {
+    margin: 30px;
+    padding: 50px 30px;
+    border: 1px solid #333;
+    max-width: 520px;
+    text-align: center;
+}
+div#login h1{
+    font-size: 28px;
+    margin-bottom: 50px;
+    line-height: 1.25em;
+}
+div#login a{
+    font-size: 16px;
+}
+div#kanban {
+/*
+    position: absolute;
+    top: 0;
+    left: 0;
+    text-align: center;
+    vertical-align: center;
+    height: 42px;
+    width:  42px;
+    margin-left: 10px;
+*/
+    padding: 30px 20px 10px 20px;
+    font-size: 24px;
+    font-weight: bold;
+/*    color: #ddd;*/
+/*    color: #333;*/
+    color: #00A23F;
+/*    background-color: #E2EEE1;*/
+    border-bottom: 5px double #00A23F;
+/*    background-color: #eee;*/
+/*    border-bottom: 5px double #00629D;*/
+}
+div#menu {
+    border-top: 3px solid #00629D;
+/*    margin-top: 60px;*/
+/*    background-color: #45277F;*/
+/*    background-color: #00A23F;*/
+    background-color: #4a4a4a;
+}
+div#upper, div#lower  {
+/*    border-bottom: 1px solid #00629D;*/
+/*    border-bottom: 1px solid #8EC9ED;*/
+}
+
+div#upper a, div#logout,div#menu {
+    color: #eee;
+}
+div#warn {
+    color: #cc3333;
+}
+div#menu a {
+}
+div#upper ul, div#lower ul {
+/*    margin-left: 60px;*/
+    padding-left: 20px;
+
+}
+div#lower {
+    background-color: #ccc;
+}
+div#menu ul li{
+    float: left;
+    display: block; 
+/*    width: 55px;*/
+    width: 165px;
+    padding: 7px 0px;
+    text-align: center;
+    border-left: 1px solid #aaa;
+    border-right: 1px solid #aaa;
+    border-bottom: 1px solid #aaa;
+    margin: 0 0 0 -1px;
+}
+div#menu ul li:first-child{
+/*
+    border-right: 1px solid #555;
+*/
+}
+div#menu ul li.long{
+    width: 165px;
+/*    text-align: right;*/
+}
+div#menu ul li.right{
+    text-align: right;
+}
+div#submenu {
+    background-color: #edf;
+    height: 5px;
+}
+div#logout {
+    padding:10px;
+    float: right;
+}
+div#main h1{
+    font-size: 16pt;
+    padding: 10px 0px;
+}
+div#main {
+    padding: 10px 0px 20px 20px;
+/*    border-bottom: solid 3px #333;*/
+    border-bottom: 3px solid #00629D;
+/*    background-color: #eee;*/
+}
+div#resultField h1{
+    font-size: 16pt;
+    padding: 10px 0px;
+}
+div#resultField h2{
+    font-size: 14pt;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+div#resultField h3{
+    font-size: 12pt;
+}
+div#score {
+    display: inline;
+    padding: 0px 10px 0px 10px;
+}
+
+div#sectionAndTime div{
+    display: inline;
+    padding: 0px 10px 0px 10px;
+}
+
+div#resultField {
+    padding: 20px;
+}
+div#resultField table{
+    width: 100%;
+    border-collapse: collapse;
+}
+div#resultField td{
+    padding: 3px;
+    border: 1px solid #b9b9b9;
+}
+div#resultField th{
+    padding: 3px;
+    background-color: #eee;
+    color: #333;
+    border: 1px solid #b9b9b9;
+}
+div#smltitle {
+    display: inline-block;
+    width: 20px;
+    text-align: center;
+}
+div#scotitle{
+    display: inline;
+    padding-left: 10px;
+}
+div.csvSubmitForm {
+    border: solid 1px black;
+    width: 360px;
+    padding: 30px 50px;
+    margin: 10px;
+    display: inline-block;
+}
+textarea {
+    height: 300px;
+}
+div.score {
+    display: inline-block;
+    width:150px;
+}
+div.date {
+    display: inline-block;
+    width:250px;
+}
+div.tracking {
+    position: fixed;
+    bottom: 10px;
+    right: 190px;
+}
+div.finalTest {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+}
+div.updateNotice {
+    padding: 10px 0px 10px 10px;
+    width: 155px;
+    font-size: 10pt;
+    background-color: #fafafa;
+    border: solid 1px #aaccaa;
+}
+div.lang {
+    display: inline-block;
+    width: 25px;
+    font-size: 8pt;
+    padding-left: 10pt;
+}
+div.updateTime {
+    display: inline-block;
+    width: 110px;
+    font-size: 8pt;
+}
+span.checkbox {
+    display: inline-block;
+    width: 120px;
+    text-align: left;
+}
