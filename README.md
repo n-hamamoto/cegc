@@ -26,6 +26,8 @@
 
 ## Install
 
+ダウンロードしたソースを，適当なLAMP+Shibboleth SP環境にアップロードして公開してください。
+
 設定は，confディレクトリ内にあります。
 conf/config.phpの以下のパラメータを設定します。
 <pre>
