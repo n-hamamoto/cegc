@@ -55,6 +55,7 @@ $idpdb = '';            #データベース名
 
 以上の変更が終了したら，config内にある下記のphpでDBの初期設定をおこなってください。
 <pre>
-php moodlelog-init.php
+cd [config_dir]
+sh ./init.sh
 </pre>
 
