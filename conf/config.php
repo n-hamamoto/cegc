@@ -4,6 +4,7 @@ $dbuser = ''; 		#データベースにアクセスするためのユーザ名
 $dbpassword = '';	#データベースにアクセスするためのパスワード
 $logdb   = '';		#データベース名
 $inituser = '';		#最初に作るユーザ
+$eppnDomain = '';       #eppnで利用しているドメイン
 
 # 0: computedID, 1: storedID
 $sw = 0; 
