@@ -14,13 +14,14 @@ $userid = $_POST['name'];
 <?php
 
 $eptid = getEptid($userid);
+//print $eptid;
 
 //成績を表示する
-function printNiiMoodleLog($pdo, $lang, $title, $eptid){
+function printNiiMoodleLog($pdo, $lang, $title, $eptid, $userid){
 
   $sql = null;
   $input = array();
-  $sql = $sql.sprintf("SELECT * from niiMoodleLog where eptid = '%s' and lang = '%s'",$eptid,$lang);
+  $sql = $sql.sprintf("SELECT * from niiMoodleLog where ( eptid = '%s' and lang = '%s' ) or ( eptid = '%s' and lang = '%s' )",$eptid,$lang,$userid,$lang);
 
   print "<h2>".$title."</h2>";
 
@@ -35,7 +36,7 @@ function printNiiMoodleLog($pdo, $lang, $title, $eptid){
     print "）";
     print "</div>";
     print "<div class='date'>";
-    print "受験日時 ".$result["Start"];
+    print "受験日時 ".$result["End"];
     print "</div>";
     print "</div>";
   }
@@ -43,32 +44,25 @@ function printNiiMoodleLog($pdo, $lang, $title, $eptid){
 }
 
 //受講履歴を表示する
-function printNiiTrackingLog($pdo, $lang, $title, $eptid){
+function printNiiTrackingLog($pdo, $lang, $title, $eptid, $userid){
 
-  $sql = "SELECT * from niiMoodleTracking where eptid = ? and lang = ?";
+  $sql = "SELECT * from niiMoodleTracking where ( eptid = ? and lang = ? ) or ( eptid = ? and lang = ? )";
   $stmt = $pdo->prepare($sql);
-  $stmt->execute( array($eptid, $lang) );
-  $result = $stmt->fetch(PDO::FETCH_ASSOC);
+  $stmt->execute( array($eptid, $lang, $userid, $lang) );
 
   print "<h2 class='opAndClToggle'>$title</h2>";
   print "<div class='opAndClblock'>";
   print "<table>";
-  if(is_array($result)){
-   foreach($result as $key => $value){
+
+  $empty=1;
+  while($result = $stmt->fetch(PDO::FETCH_ASSOC)){
     print "<tr>";
-    if($key == "eptid"){
-    }elseif($key == "Status"){
-    }elseif($key == "Start"){
-    }elseif($key == "Latest"){
-      echo "<td>"."最終受講日時"."</td><td>".$value."</td>";
-    }elseif($key == "Score"){
-      echo "<td>"."完了した数"."</td><td>".$value."/82</td>";
-    }else{
-      echo "<td>".$key."</td><td>".$value."</td>";
-    }
+    echo "<td>".$result['field']."</td>";
+    echo "<td>".$result['value']."</td>";
     print "</tr>";
-   }
-  }else{
+    $empty=0;
+  }
+  if($empty == 1){
    print "受講履歴がありません";
   }
   print "</table>";
@@ -87,34 +81,34 @@ $pdo = pdo_connect_db($logdb);
 
 $title = "総合テスト(Ja)";
 $lang = "Ja";
-printNiiMoodleLog($pdo, $lang, $title, $eptid);
+printNiiMoodleLog($pdo, $lang, $title, $eptid, $userid);
 
 $title = "総合テスト(En)";
 $lang = "En";
-printNiiMoodleLog($pdo, $lang, $title, $eptid);
+printNiiMoodleLog($pdo, $lang, $title, $eptid, $userid);
 
 $title = "総合テスト(Cn)";
 $lang = "Cn";
-printNiiMoodleLog($pdo, $lang, $title, $eptid);
+printNiiMoodleLog($pdo, $lang, $title, $eptid, $userid);
 
 $title = "総合テスト(Kr)";
 $lang = "Kr";
-printNiiMoodleLog($pdo, $lang, $title, $eptid);
+printNiiMoodleLog($pdo, $lang, $title, $eptid, $userid);
 
 $lang="Ja";
 $title = "受講状況(Ja)";
-printNiiTrackingLog($pdo, $lang, $title, $eptid);
+printNiiTrackingLog($pdo, $lang, $title, $eptid, $userid);
 
 $lang="En";
 $title = "受講状況(En)";
-printNiiTrackingLog($pdo, $lang, $title, $eptid);
+printNiiTrackingLog($pdo, $lang, $title, $eptid, $userid);
 
 $lang="Cn";
 $title = "受講状況(Cn)";
-printNiiTrackingLog($pdo, $lang, $title, $eptid);
+printNiiTrackingLog($pdo, $lang, $title, $eptid, $userid);
 
 $lang="Kr";
 $title = "受講状況(Kr)";
-printNiiTrackingLog($pdo, $lang, $title, $eptid);
+printNiiTrackingLog($pdo, $lang, $title, $eptid, $userid);
 
 ?>

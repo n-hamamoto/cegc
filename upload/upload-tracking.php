@@ -42,31 +42,6 @@ try {
   $stmt = $pdo->prepare($sql);
   $executed = $stmt->execute( array( $lang, $year) );
 
-  //データ追加用sql準備
-  $stmt = $pdo->prepare("INSERT INTO 
-$logtable 
-(lang, year, eptid, Status, Start, Latest, Score, 
-0_1, 0_2, 0_3, 0_4, 
-1_1, 1_2, 1_3_1, 1_3_2, 1_4_1, 1_4_2, 1_5_1, 1_6,
-2_1, 2_2, 2_3_1, 2_3_2, 2_4_1, 2_4_2, 2_4_3, 2_5_1, 2_5_2, 2_6,
-3_1, 3_2, 3_3_1, 3_3_2, 3_4_1, 3_4_2, 3_5_1, 3_6,
-4_1, 4_2, 4_3_1, 4_3_2, 4_4_1, 4_4_2, 4_4_3, 4_4_4, 4_5_1, 4_5_2, 4_6,
-5_1, 5_2, 5_3_1, 5_3_2, 5_4_1, 5_4_2, 5_4_3, 5_5_1, 5_5_2, 5_6,
-6_1, 6_2, 6_3_1, 6_3_2, 6_4_1, 6_4_2, 6_4_3, 6_4_4, 6_5_1, 6_5_2, 6_6,
-7_1, 7_2, 7_3_1, 7_3_2, 7_4_1, 7_4_2, 7_4_3, 7_5_1, 7_6,
-8_1, 8_2, 8_3_1, 8_3_2, 8_4_1, 8_4_2, 8_5_1, 8_6, 
-9_1, 9_2, 9_3)
-VALUES(
-?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
-?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
-?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
-?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
-?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
-?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
-?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
-?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
-?, ?, ?, ?, ?, ?, ?, ?, ? );");
-
   try {
     $fp = fopen($uploadFile, 'rb');
     $i=0;
@@ -74,27 +49,69 @@ VALUES(
     // CSV/TSV読み込み
     print "<pre>";
     while ($row = fgetcsv($fp,0,$separator)){
+    print 'i='.$i.' '.$row[0].'<br>';
+    // 出力バッファの内容を送信
+    @ob_flush();
+    @flush();
+    //  print_r($row);
       $i++;
+      //最初の行を項目名として$labelに保存
       if($i==1){
 	$label=$row;
+        print count($label);
+        for($ii=0; $ii<count($label); $ii++){
+          print "$ii $label[$ii]<br>";
+        }
+        //とにかく出力（タイムアウト対策）
+	if($i%100 == 0){
+          @ob_flush();
+          @flush();
+	}
+       //データ追加用sql準備
+       print count($row);
+       $place_holders = array_pad(array(), count($row)-1, '(?, ?, ?, ?, ?)');
+       $values_clause = implode(', ',$place_holders);
+       //print $values_clause;
+       $stmt = $pdo->prepare('INSERT INTO '.$logtable.' (lang, year, eptid, field, value) VALUES'.$values_clause);
+       //$stmt = $pdo->prepare("INSERT INTO $logtable (lang, year, eptid, field, value) VALUES(?, ?, ?, ?, ? )");
       }
 
+      //2行目以降の処理
+      $idType = "false";
+
+      //ePTIDの場合
       $patten ='/^https\:\/\//';
       if(preg_match($patten,$row[0])){
+	$idType = "ePTID";
+        //1列目（https://idp-entityID!https://sp-entityID!EPTID）からEPTID部分を取得
 	$tmp = preg_split('/!/',$row[0]);
-	$row[0] = $tmp[2];
-        if($row[4] == "-"){
-	   $row[4]=0;
+	$eptid = $tmp[2];
+       }
+       // eppnの場合
+      $patten ='/^(.+)@'.$eppnDomain.'$/';
+      if(preg_match($patten,$row[0])){
+        $idType="eppn";
+        //eppn
+        $tmp = preg_split('/@/',$row[0]);
+        $eptid = $tmp[0];
+      }
+
+      //ePTIDかeppnを見つけたら登録
+      if($idType !== 'false'){
+        $values_array = array();
+	for($ii=1; $ii<count($row); $ii++){
+          // print "$ii $lang $year $eptid $label[$ii] $row[$ii]<br>";
+          // SQL実行
+//	  $executed = $stmt->execute( array($lang, $year, $eptid, $label[$ii], $row[$ii]));
+//          print_r(array($lang, $year, $eptid, $label[$ii], $row[$ii]));
+	  array_push($values_array, $lang, $year, $eptid, $label[$ii], $row[$ii]);
         }
-	$ii=$i-1;
-        print $row[0]." | ".$row[1]." | ".$row[4]."  #".$ii." ";
-    	// langとyearを追加
-	array_unshift($row, $lang, $year);
-//	array_push($row, 'now()', 'now()');
-//        print_r($row);print "<br>";
-	print "*".count($row)."<br>";
-        // SQL実行
-	$executed = $stmt->execute($row);
+        //print "array";
+        //print_r($values_array);
+        //print "array";
+
+       // SQL実行
+       $executed = $stmt->execute( $values_array );
        }
      }
      print "</pre>";

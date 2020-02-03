@@ -12,19 +12,19 @@ include("../../lib/dblib.php");
 include("../../lib/id.php");
 include("../../lib/function.php");
 
-function print_score($pdo,$lang,$year,$eptid){
+function print_score($pdo,$lang,$year,$eptid,$userid){
   $table= "niiMoodleLog";
-  $stmt= $pdo->prepare("select FinalTest,End from ".$table." where eptid = ? and lang = ? order by Start");
-  $stmt->execute( array( $eptid, $lang ) );
+  $stmt= $pdo->prepare("select FinalTest,End from ".$table." where ( eptid = ? and lang = ? ) or ( eptid = ? and lang = ? ) order by Start");
+  $stmt->execute( array( $eptid, $lang, $userid, $lang ) );
 
   $score=""; $examdate="";
   while($data= $stmt->fetch(PDO::FETCH_ASSOC)){
-    if($data[FinalTest]>=80){
-      $score = $score."<strong>".htmlspecialchars($data[FinalTest])."</strong><br>";
+    if($data['FinalTest']>=80){
+      $score = $score."<strong>".htmlspecialchars($data['FinalTest'])."</strong><br>";
     }else{
-      $score = $score.htmlspecialchars($data[FinalTest])."<br>";
+      $score = $score.htmlspecialchars($data['FinalTest'])."<br>";
     }
-    $examdate=$examdate.htmlspecialchars($data[End])."<br>";
+    $examdate=$examdate.htmlspecialchars($data['End'])."<br>";
   }
   print "<td>";
   print $score;
@@ -48,7 +48,7 @@ $stmt->execute( array( $_POST['groupId'] ) );
 
 $i=0;
 while($data= $stmt->fetch(PDO::FETCH_ASSOC)){
-  $id[$i] = $data[idNumber];
+  $id[$i] = $data['idNumber'];
   //print "$id[$i]<br>";
   $i++;
 }
@@ -84,13 +84,13 @@ for($i=0;$i<$imax;$i++){
   print "<td>";
   xss_char_echo($id[$i]);
   print "</td>";
-  print_score($pdo,"Ja",$year,$eptid);
+  print_score($pdo,"Ja",$year,$eptid,$id[$i]);
   // English
-  print_score($pdo,"En",$year,$eptid);
+  print_score($pdo,"En",$year,$eptid,$id[$i]);
   // Chinise
-  print_score($pdo,"Cn",$year,$eptid);
+  print_score($pdo,"Cn",$year,$eptid,$id[$i]);
   // Korean
-  print_score($pdo,"Kr",$year,$eptid);
+  print_score($pdo,"Kr",$year,$eptid,$id[$i]);
   print "</tr>";
 }
 print "</table>";

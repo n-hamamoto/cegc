@@ -16,7 +16,7 @@ if($_SESSION["isAdmin"] === "1" || $_SESSION["isSubAdmin"] === "1"){}else{
 </head>
 <body>
 <p><?php
-$year = $_POST[year];
+$year = $_POST['year'];
 /*DB接続*/
   $pdo = pdo_connect_db($logdb);
   $sql = sprintf("update defaultAcademicYear set year = ?");

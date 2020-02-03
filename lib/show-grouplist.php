@@ -16,7 +16,7 @@ if( $_SESSION['isAdmin']==='1' || $_SESSION['isGroupAdmin']==='1'){
 
 $i=0;
 while($data= $stmt->fetch(PDO::FETCH_ASSOC)){
-  $groupId[$i] = $data[groupId];
+  $groupId[$i] = $data['groupId'];
   $i++;
 }
 $imax = $i;
@@ -26,8 +26,8 @@ for($i=0;$i<$imax;$i++){
   $stmt = $pdo->prepare($sql);	 
   $stmt->execute( array($groupId[$i]) );
   $data= $stmt->fetch(PDO::FETCH_ASSOC);
-  $groupName[$i] = $data[groupName];
-  $year[$i] = $data[year];
+  $groupName[$i] = $data['groupName'];
+  $year[$i] = $data['year'];
 
   $sql = sprintf("select idNumber from groupMember where groupId = ? ");
   $stmt = $pdo->prepare($sql);	 
@@ -45,7 +45,7 @@ for($i=0;$i<$imax;$i++){
   $ii=0;
   while($data= $stmt->fetch(PDO::FETCH_ASSOC)){
     $ii++;
-    xss_char_echo($data[idNumber]);
+    xss_char_echo($data['idNumber']);
     print ' ';
     if($ii===5){
       print "<br>";

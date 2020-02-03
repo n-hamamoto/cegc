@@ -19,6 +19,6 @@ $idpdb = ''; 		#データベース名
 $lowercaseId = 1;
 
 #$documentRoot = $_SERVER['SERVER_NAME']."/GU/cyberethics-log/";
-$documentRoot = ""."/"; #本システムのURLを指定してください
+$documentRoot = ""."/"; #本システムのURL(例: example.ac.jp/)を指定してください
 
 ?>

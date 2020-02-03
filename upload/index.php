@@ -48,7 +48,7 @@ include("../lib/displayUpdate.php");
   $sql = sprintf("select year from defaultAcademicYear");
   $stmt = pdo_query_db($pdo,$sql);
   $data= $stmt->fetch(PDO::FETCH_ASSOC);
-  $academicYear = $data[year];
+  $academicYear = $data['year'];
 
   //print "<option value='current' selected>選択してください</option>";
   for($year=$academicYear; $year>2011; $year--){
@@ -98,7 +98,7 @@ include("../lib/displayUpdate.php");
   $sql = sprintf("select year from defaultAcademicYear");
   $stmt = pdo_query_db($pdo,$sql);
   $data= $stmt->fetch(PDO::FETCH_ASSOC);
-  $academicYear = $data[year];
+  $academicYear = $data['year'];
 
   //print "<option value='current' selected>選択してください</option>";
   for($year=$academicYear; $year>2011; $year--){
@@ -138,7 +138,7 @@ include("../lib/displayUpdate.php");
   $sql = sprintf("select year from defaultAcademicYear");
   $stmt = pdo_query_db($pdo,$sql);
   $data= $stmt->fetch(PDO::FETCH_ASSOC);
-  $configured_year = $data[year];
+  $configured_year = $data['year'];
 
   printf("現在は「%s年度」に設定されています。<br>",$configured_year);
   printf('<select name="year">');

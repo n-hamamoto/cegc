@@ -22,35 +22,35 @@ print "<tr>
 while($data = $stmt->fetch(PDO::FETCH_ASSOC) ){
   print "<tr>";
   print "<td>";
-  xss_char_echo($data[userId]);
+  xss_char_echo($data['userId']);
   print "</td>";
   print "<td>";
-  xss_char_echo($data[isAdmin]);
+  xss_char_echo($data['isAdmin']);
   print "</td>";
   print "<td>";
-  xss_char_echo($data[isGroupAdmin]);
+  xss_char_echo($data['isGroupAdmin']);
   print "</td>";
   print "<td>";
-  xss_char_echo($data[isSubAdmin]);
+  xss_char_echo($data['isSubAdmin']);
   print "</td>";
 /*
   print "<td>";
-  xss_char_echo($data[isTeacher]);
+  xss_char_echo($data['isTeacher']);
   print "</td>";
 */
 
   $i++;
-  $sql = "select groupId from groupAdmin where userId = '".$data[userId]."' order by groupId";
+  $sql = "select groupId from groupAdmin where userId = '".$data['userId']."' order by groupId";
   $stmt2 = pdo_query_db($pdo,$sql);
 
   print "<td>";
   while($data2 = $stmt2->fetch(PDO::FETCH_ASSOC) ){
-    $sql = "select groupName,year from groupInfo where groupId = '".$data2[groupId]."'";
+    $sql = "select groupName,year from groupInfo where groupId = '".$data2['groupId']."'";
     $stmt3 = pdo_query_db($pdo,$sql);
     $data3 = $stmt3->fetch(PDO::FETCH_ASSOC);
-    xss_char_echo($data3[year]);
+    xss_char_echo($data3['year']);
     print " : ";
-    xss_char_echo($data3[groupName]);
+    xss_char_echo($data3['groupName']);
     print "<br>";
   }
   print "</td></tr>";

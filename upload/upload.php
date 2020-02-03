@@ -52,14 +52,36 @@ try {
     print "<pre>";
     while ($row = fgetcsv($fp,0,$separator)){
       $i++;
+
+      //とにかく出力（タイムアウト対策）
+      if($i%100 == 0){
+          @ob_flush();
+          @flush();
+	  }
+
+      $idType="false";
+// ePTIDの場合
       $patten ='/^https\:\/\//';
       if(preg_match($patten,$row[0])){
+	$idType="ePTID";
+        //eptid
+        $tmp = preg_split('/!/',$row[0]);
+        $rowdata[2] = $tmp[2];
+      }
+// eppnの場合
+      $patten ='/^(.+)@'.$eppnDomain.'$/';
+      if(preg_match($patten,$row[0])){
+	$idType="eppn";
+	//eppn
+        $tmp = preg_split('/@/',$row[0]);
+	$rowdata[2] = $tmp[0];
+      }
+
+// ePTIDかeppnを見つけたら登録
+      if($idType !== 'false'){
 	 //print_r($row);print "<br>";print "*".count($row)."<br>";
 	 $rowdata[0]=$lang;
 	 $rowdata[1]=$year;
-	 //eptid
-	 $tmp = preg_split('/!/',$row[0]);
-	 $rowdata[2] = $tmp[2];
 	 //Status
 	 $rowdata[3] = $row[1];
 	 //Start
