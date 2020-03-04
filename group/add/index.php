@@ -27,7 +27,7 @@ if($_SESSION["isAdmin"] === "1" || $_SESSION["isGroupAdmin"] === "1"){}else{
 <select name="year">
 <?php
   $thisYear = date("Y");
-  for($i=2015; $i<=$thisYear; $i++){
+  for($i=$thisYear; $i>=2015; $i--){
     print "<option value='".$i."'>".$i."</option>";
   }
 ?>

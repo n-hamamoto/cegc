@@ -45,7 +45,7 @@ $pdo = null;
   //
   // 年度選択フォームを出力
   $thisYear = date("Y");
-  for($i=2015; $i<=$thisYear; $i++){
+  for($i=$thisYear; $i>=2015; $i--){
     print "<option value='".$i."'>".$i."</option>";
   }
 ?>

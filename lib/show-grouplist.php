@@ -5,11 +5,11 @@
 $pdo = pdo_connect_db($logdb);
 if( $_SESSION['isAdmin']==='1' || $_SESSION['isGroupAdmin']==='1'){
   print "あなたは管理者なので，自身が管理するグループ以外も表示しています";
-  $sql = sprintf("select groupId from groupInfo order by year, groupName");
+  $sql = sprintf("select groupId from groupInfo order by year desc, groupName asc");
   $stmt = $pdo->prepare($sql);	 
   $stmt->execute();
 }else{
-  $sql = sprintf("select groupId from groupAdmin where userId = ? order by groupId");
+  $sql = sprintf("select groupId from groupAdmin where userId = ? order by groupId desc");
   $stmt = $pdo->prepare($sql);	 
   $stmt->execute( array($_SESSION['userId']) );
 }
@@ -48,7 +48,7 @@ for($i=0;$i<$imax;$i++){
     xss_char_echo($data['idNumber']);
     print ' ';
     if($ii===5){
-      print "<br>";
+//      print "<br>";
       $ii=0;
     }
   }
