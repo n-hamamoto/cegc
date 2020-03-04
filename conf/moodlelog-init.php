@@ -14,9 +14,17 @@ $sql="alter table niiMoodleTracking add index index_created_at(lang, created_at)
 // クエリ
 $stmt = pdo_query_db($pdo,$sql);
 
+$sql="alter table niiMoodleTracking add index index_eptid(eptid)";
+// クエリ
+$stmt = pdo_query_db($pdo,$sql);
+
 $sql="CREATE TABLE niiMoodleLog (lang CHAR(255) NOT NULL, year INT NOT NULL, eptid CHAR(255) NOT NULL, Status CHAR(255), Start CHAR(255), End CHAR(255), ElapsedTime CHAR(255), FinalTest INT, 
 created_at timestamp not null default current_timestamp, 
 updated_at timestamp not null default current_timestamp on update current_timestamp)";
+// クエリ
+$stmt = pdo_query_db($pdo,$sql);
+
+$sql="alter table niiMoodleLog add index index_eptid(eptid)";
 // クエリ
 $stmt = pdo_query_db($pdo,$sql);
 
