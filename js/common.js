@@ -18,7 +18,6 @@ $(function(){
 		$(this).children("img").toggleClass("open");
 		
     })
-	    //	    .prepend("<img src=\"http://www.media.gunma-u.ac.jp/assets/templates/media/images/opandcl_arrow.png\" width=\"14\" height=\"14\">");
 
 // Ajax対応フォーム
 // #inputFormの結果を#resultFieldに返す

@@ -18,6 +18,6 @@ $(function(){
 		$(this).children("img").toggleClass("open");
 		
 	    })
-	    .prepend("<img src=\"https://mdl2.media.gunma-u.ac.jp/GU/cyberethics-log/img/opandcl_arrow.png\" width=\"14\" height=\"14\">");
+	    .prepend("<img src=\"img/opandcl_arrow.png\" width=\"14\" height=\"14\">");
 
     });

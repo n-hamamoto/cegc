@@ -12,8 +12,7 @@ function get_server_var($val){
  return null;
 }
 
-$pattern = '/^.+\@gunma\-u\.ac\.jp$/';
-
+$pattern = '/^.+'.$eppnDomain."$/";
 $subject = get_server_var('EPPN');
 
 if(preg_match($pattern,$subject)){
