@@ -21,4 +21,6 @@ $lowercaseId = 1;
 #$documentRoot = $_SERVER['SERVER_NAME'].'/GU/cyberethics-log/';
 $documentRoot = ''.'/'; #本システムのURL(例: example.ac.jp/)を指定してください
 
-?>
+// There is no php closing tag in this file,
+// it is intentional because it prevents trailing whitespace problems!
+
