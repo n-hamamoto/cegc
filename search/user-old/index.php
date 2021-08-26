@@ -10,7 +10,7 @@ if($_SESSION["isAdmin"] === "1" || $_SESSION["isSubAdmin"] === "1"){}else{
 ?>
 <html>
 <head>
-<title>ユーザ検索</title>
+<title>ユーザ検索(旧)</title>
 <script type="text/javascript" src="../../jquery.min.js"></script>
 <script type="text/javascript" src="./select-user.js"></script>
 <?php include("../../lib/header.php");?>
@@ -21,7 +21,7 @@ include("../../lib/menu.php");
 include("../../lib/displayUpdate.php");
 ?>
 <div id="main">
-<h1>ユーザ検索</h1>
+<h1>ユーザ検索(旧)</h1>
 <form id="inputForm" action="search/user-old/select-user.php" method="post">
 <p>
 userid: <input type="text" name="name" size="40">
