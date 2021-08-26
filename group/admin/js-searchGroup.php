@@ -10,58 +10,53 @@ $userId = $_POST['userId'];
 
 $pdo = pdo_connect_db($logdb);
 
+//ユーザの管理しているグループのグループIDを取得
 $stmt = $pdo->prepare("select groupId from groupAdmin where userId = ? order by groupId");
 $stmt->execute( array( $userId ) );
 
-//$sql = sprintf("select groupId from groupAdmin where userId = '".$userId."' order by groupId");
-//$res = wrap_mysql_query($sql, $conn);
-$i=0;
 while($data = $stmt->fetch(PDO::FETCH_ASSOC)){
-  $gid[$i] = $data[groupId];
-  $i++;
+  $adminGids[] = $data[groupId];//配列に要素を追加(pushと同等)
 }
-$imax = $i;
 
-$sql = "select groupId, groupName, year from groupInfo order by groupId";
+//年度を取得
+$sql = "SELECT DISTINCT year from groupInfo order by year desc";
 $stmt = pdo_query_db($pdo, $sql);
-$j=0;
 while($data = $stmt->fetch(PDO::FETCH_ASSOC)){
-  $gidAll[$j] = $data[groupId];
-  $gnameAll[$j] = $data[groupName];
-  $yearAll[$j] = $data[year];
-  $j++;
+    $years[]=$data[year];//配列に要素を追加(pushと同等)
 }
-$jmax = $j;
 
-$pdo = null;
+//チェックボックス出力
+foreach($years as $y){
+    print "<h4>$y 年度</h4>";
+    $sql = "select groupId, groupName, year from groupInfo where year = $y order by groupName";
+    $stmt = pdo_query_db($pdo, $sql);
+    while($data = $stmt->fetch(PDO::FETCH_ASSOC)){
 
-#print_r($gid);
-#print_r($gidall);
+  	$checked = "";
+        foreach($adminGids as $gid){
+    		if($data[groupId] === $gid){
+      			$checked = "checked";
+    		}
+  	}
 
-//inputの表示
-for($j=0;$j<$jmax;$j++){
-  $checked = "";
-  for($i=0;$i<$imax;$i++){
-    if($gidAll[$j] === $gid[$i]){
-      $checked = "checked";
+  	print "<span class='checkbox'>";
+  	print "<label for='";
+  	xss_char_echo($data[groupId]);
+  	print "'>";
+  	print "<input type='checkbox' name='groupId[]' id='";
+  	xss_char_echo($data[groupId]);
+  	print "' value='";
+  	xss_char_echo($data[groupId]);
+  	print "' ";
+  	xss_char_echo($checked);
+  	print "> ";
+  	xss_char_echo($data[groupName]);
+  	print " (";
+  	xss_char_echo($data[year]);
+  	print ")";
+  	print "</label>";
+  	print "</span>";        
+	//print "$data[year], $data[groupId], $data[groupName]"."<br>";
     }
-  }
-  print "<span class='checkbox'>";
-  print "<label for='"; 
-  xss_char_echo($gidAll[$j]); 
-  print "'>";
-  print "<input type='checkbox' name='groupId[]' id='";
-  xss_char_echo($gidAll[$j]);
-  print "' value='";
-  xss_char_echo($gidAll[$j]);
-  print "' ";
-  xss_char_echo($checked);
-  print "> ";
-  xss_char_echo($gnameAll[$j]);
-  print " (";
-  xss_char_echo($yearAll[$j]);
-  print ")";
-  print "</label>";
-  print "</span>";
 }
 ?>

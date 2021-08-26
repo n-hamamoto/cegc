@@ -13,11 +13,15 @@ include("../../lib/id.php");
 include("../../lib/function.php");
 
 function print_score($pdo,$lang,$year,$eptid,$userid){
+
+//変数初期化
+  $score=""; $examdate="";
+
+//現りんりん姫の検索
   $table= "niiMoodleLog";
   $stmt= $pdo->prepare("select FinalTest,End from ".$table." where ( eptid = ? and lang = ? ) or ( eptid = ? and lang = ? ) order by Start");
   $stmt->execute( array( $eptid, $lang, $userid, $lang ) );
 
-  $score=""; $examdate="";
   while($data= $stmt->fetch(PDO::FETCH_ASSOC)){
     if($data['FinalTest']>=80){
       $score = $score."<strong>".htmlspecialchars($data['FinalTest'])."</strong><br>";
@@ -26,6 +30,21 @@ function print_score($pdo,$lang,$year,$eptid,$userid){
     }
     $examdate=$examdate.htmlspecialchars($data['End'])."<br>";
   }
+
+//旧りんりん姫の検索
+  $table= "niiMoodleLog_old";
+  $stmt= $pdo->prepare("select FinalTest,End from ".$table." where ( eptid = ? and lang = ? ) or ( eptid = ? and lang = ? ) order by Start");
+  $stmt->execute( array( $eptid, $lang, $userid, $lang ) );
+
+  while($data= $stmt->fetch(PDO::FETCH_ASSOC)){
+    if($data['FinalTest']>=80){
+      $score = $score."<strong>".htmlspecialchars($data['FinalTest'])."</strong><br>";
+    }else{
+      $score = $score.htmlspecialchars($data['FinalTest'])."<br>";
+    }
+    $examdate=$examdate.htmlspecialchars($data['End'])."<br>";
+  }
+
   print "<td>";
   print $score;
   print "</td>";

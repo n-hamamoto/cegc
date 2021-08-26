@@ -15,13 +15,8 @@
 if($_SESSION["isAdmin"]==="1" || $_SESSION["isSubAdmin"]==="1"){
 print '
 <li><a href="search/user/">ユーザ検索</a></li>
+<li><a href="search/user-old/">ユーザ検索(旧)</a></li>
 ';
-/*
-print '
-<li><a href="search/user-mdl2/">ユーザ検索(mdl2)</a></li>
-<li><a href="search/user-mdl19/">ユーザ検索(mdl19)</a></li>
-';
-*/
 };
 ?>
 <?php

@@ -6,6 +6,7 @@ include("../lib/dblib.php");
 // DBへ接続
 $pdo = pdo_connect_db($logdb);
 
+//niiMoodleTrackingテーブルの作成
 $sql="create table niiMoodleTracking(lang CHAR(255) NOT NULL, year INT NOT NULL, eptid CHAR(255) NOT NULL, field CHAR(255) NOT NULL, value CHAR(255) NOT NULL, created_at timestamp not null default current_timestamp, updated_at timestamp not null default current_timestamp on update current_timestamp)";
 // クエリ
 $stmt = pdo_query_db($pdo,$sql);
@@ -18,6 +19,12 @@ $sql="alter table niiMoodleTracking add index index_eptid(eptid)";
 // クエリ
 $stmt = pdo_query_db($pdo,$sql);
 
+//niiMoodleTracking_oldテーブル
+$sql="CREATE TABLE niiMoodleTracking_old LIKE niiMoodleTracking";
+// クエリ
+$stmt = pdo_query_db($pdo,$sql);
+
+//niiMoodleLogテーブルの作成
 $sql="CREATE TABLE niiMoodleLog (lang CHAR(255) NOT NULL, year INT NOT NULL, eptid CHAR(255) NOT NULL, Status CHAR(255), Start CHAR(255), End CHAR(255), ElapsedTime CHAR(255), FinalTest INT, 
 created_at timestamp not null default current_timestamp, 
 updated_at timestamp not null default current_timestamp on update current_timestamp)";
@@ -27,6 +34,12 @@ $stmt = pdo_query_db($pdo,$sql);
 $sql="alter table niiMoodleLog add index index_eptid(eptid)";
 // クエリ
 $stmt = pdo_query_db($pdo,$sql);
+
+//niiMoodleTracking_oldテーブル
+$sql="CREATE TABLE niiMoodleLog_old LIKE niiMoodleLog";
+// クエリ
+$stmt = pdo_query_db($pdo,$sql);
+
 
 $sql="CREATE TABLE groupMember (idNumber CHAR(255) not null, groupId CHAR(255) not null, PRIMARY KEY(idNumber, groupId))";
 // クエリ

@@ -201,6 +201,13 @@ div.updateTime {
 }
 span.checkbox {
     display: inline-block;
-    width: 120px;
+    width: 300px;
     text-align: left;
+}
+div#groupField h4 {
+    display: block;
+    weight: bold;
+    font-size: 110%;
+    margin: 10px 0 5px 0;
+    border-bottom: 1px black solid;
 }

@@ -63,6 +63,17 @@ include("../lib/displayUpdate.php");
   </select>
   <br /> 
 </div>
+
+<br/>
+<div>
+登録データの入手元<br>
+  <input type="radio" name="old" value="0" checked/>
+  <a href="https://lms.nii.ac.jp/mod/quiz/report.php?id=1282&mode=overview" target="_blank">現行（倫倫姫の情報セキュリティ教室）</a>
+  <br/>
+  <input type="radio" name="old" value="1"/>
+  <a href="https://lms.nii.ac.jp/mod/quiz/report.php?id=674&mode=overview" target="_blank">旧版（倫倫姫と学ぼう！情報倫理）</a>
+</div>
+
 <!--過去年度への登録（ここまで） -->
 <br />
 <div>
@@ -113,6 +124,17 @@ include("../lib/displayUpdate.php");
   </select>
   <br />
   </div>
+
+<br/>
+<div>
+登録データの入手元<br>
+  <input type="radio" name="old" value="0" checked/>
+  <a href="https://lms.nii.ac.jp/grade/export/txt/index.php?id=56" target="_blank">現行（倫倫姫の情報セキュリティ教室）</a>
+  <br/>
+  <input type="radio" name="old" value="1"/>
+  <a href="https://lms.nii.ac.jp/mod/scorm/report.php?id=670" target="_blank">旧版（倫倫姫と学ぼう！情報倫理）</a>
+</div>
+
 <br />
 <div>
 ファイルフォーマット<br />

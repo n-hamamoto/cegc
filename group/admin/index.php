@@ -21,7 +21,7 @@ while($data = $stmt->fetch(PDO::FETCH_ASSOC)){
 }
 $imax = $i;
 
-$sql = "select groupId, groupName, year from groupInfo order by year, groupName";
+$sql = "select year, groupId, groupName from groupInfo order by year desc";
 $stmt= pdo_query_db($pdo, $sql);
 
 $j=0;
@@ -48,36 +48,15 @@ $pdo = null;
 <p>
 userId: <select name="userId" id="userId">
 <?php
-  print "<option value=''>ユーザを選択</option>";
+  print "<option value=''>ユーザを選択してください。</option>";
   for($i=0;$i<$imax;$i++){
     print "<option value='".$uid[$i]."'>".$uid[$i]."</option>";
   }
 ?>
 </select><br>
 <div id="groupField">
-<?php
-for($j=0;$j<$jmax;$j++){
-  print "<span class='checkbox'>";
-  print "<label for='"; 
-  xss_char_echo($gid[$j]); 
-  print "'>";
-  print "<input type='checkbox' name='groupId[]' id='";
-  xss_char_echo($gid[$j]);
-  print "' value='";
-  xss_char_echo($gid[$j]);
-  print "' ";
-  xss_char_echo($checked);
-  print "> ";
-  xss_char_echo($gname[$j]);
-  print " (";
-  xss_char_echo($year[$j]);
-  print ")";
-  print "</label>";
-  print "</span>";
-}
-?>
 </div>
-<input type="submit" value="Change" id="button">
+<input type="submit" value="変更する" id="button">
 </p>
 </form>
 </div>
