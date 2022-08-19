@@ -51,6 +51,7 @@ if(preg_match($pattern,$subject)){
     $_SESSION["jasn"] = get_server_var('JASN');
     $_SESSION["jaGivenName"] = get_server_var('JAGIVENNAME');
     $_SESSION["jaou"] =  get_server_var('JAOU');
+    $_SESSION["persistent-id"] =  get_server_var('PERSISTENT_ID');
 
     //管理ユーザかどうかを確認
     $stmt = $pdo->prepare("select isAdmin ,isTeacher, isGroupAdmin, isSubAdmin from user where userId = :userid");
