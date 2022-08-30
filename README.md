@@ -1,4 +1,4 @@
-# 情報倫理eラーニング受講情報確認システム：cegc (CyberEtheics Grade Comfirmation)
+# 情報倫理eラーニング受講情報確認システム：cegc (CyberEtheics Grade Confirmation)
 これは，学認連携Moodleで提供されている「情報倫理eラーニング」の成績を確認するためのシステムです。
 
 ## 前提条件
