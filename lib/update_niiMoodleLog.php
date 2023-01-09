@@ -1,6 +1,6 @@
 <?php
 
-//include_once("../conf/config.php");
+include_once("../conf/config.php");
 //include_once("../lib/dblib.php");
 
 //require("callReportAPI.php");
@@ -117,6 +117,9 @@ function update_niiMoodleLog($lang, $year, $logtable, $logdb, $eppnDomain, $last
 //		print "No.".$i;
 //		print $v;
 //		print "\n";
+                
+		//タイムアウト対策で，とにかく出力（出力バッファの内容を送信）
+                @ob_flush(); @flush();
 
 		$rowdata = array();
 		$row = array();
@@ -151,11 +154,15 @@ function update_niiMoodleLog($lang, $year, $logtable, $logdb, $eppnDomain, $last
 		$patten = '/(\d+)\/(\d+)\/(\d+)\s+(\d+):(\d+):(\d+)/';
         	if(preg_match( $patten, $row[5], $t)){
                 	$rowdata[5] = "$t[1]-$t[2]-$t[3] $t[4]:$t[5]:$t[6]";
-        	}
+        	}else{
+			$rowdata[5]=null;
+		}
 		//ElapsedTimeをdoubleにする
 		$patten = '/(\d+)秒/';
 		if(preg_match( $patten, $row[6], $t)){
 			$rowdata[6] = $t[1];
+		}else{
+			$rowdata[6]=null;
 		}
 
 //		$rowdata[2] = $row[2]; //ePTID
@@ -164,8 +171,12 @@ function update_niiMoodleLog($lang, $year, $logtable, $logdb, $eppnDomain, $last
 //		$rowdata[5] = $row[5]; //End
 //		$rowdata[6] = $row[6]; //ElepsedTime
 		$rowdata[7] = $row[7]; //FinalTest
-
-		print "$rowdata[0], $rowdata[1], $rowdata[2], $rowdata[3], $rowdata[4], $rowdata[5], $rowdata[6], $rowdata[7]".$cr;
+		$patten = '/-/';
+		if(preg_match( $patten, $row[7], $t)){
+			$rowdata[7]=null;
+		}
+		
+		print "$rowdata[0], $rowdata[1], $rowdata[2], $rowdata[3], $rowdata[4], $rowdata[5], $rowdata[6], $rowdata[7]".$br;
 
 		//SQL実行
 		try{

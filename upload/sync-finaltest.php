@@ -17,7 +17,7 @@ $logtable = 'niiMoodleLog';
 $lang = array('Ja','En','Kr','Cn');
 $year = '2022';
 $syncall = $_POST['syncall'];
-$syncall = 0; // 1: データを全て取り直す, 0: 差分をとってくる
+//$syncall = 0; // 1: データを全て取り直す, 0: 差分をとってくる
 
 //この日時以降のデータを取得
 //$date = new DateTime('2022-10-10 00:00:00');
