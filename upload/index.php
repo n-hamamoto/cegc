@@ -43,7 +43,59 @@ include("../lib/displayUpdate.php");
 </div>
 
 <div class="csvSubmitForm">
+<h1>コース情報初期連携</h1>
+<p>
+API連携を行なう場合，最初にコース情報を取得して本システムに登録する必要があります。
+</p>
+<form action="./upload/sync-courseInfo.php" method="post" >
+<div style="margin-top: 10px; margin-bottom: 10px;">
+  <input type="submit" value="コース情報を登録する" />
+  </div>
+</form>
+</div>
+
+<div class="csvSubmitForm">
+<h1>年度の設定</h1>
+<p>
+本システムでは，NIIがコースをリセットした時点で年度が替わることを想定しています。
+</p>
+<p>
+自動連携後はリセットしない運用となっているため2022年度固定値とし，設定不要としています。</p>
+<!--
+<form action="./upload/form-setAcademicYear.php" method="post" >
+<div style="margin-top: 10px; margin-bottom: 10px;">
+<?php
+  $current_year = date( "Y" );
+  $pdo = pdo_connect_db($logdb);
+  $sql = sprintf("select year from defaultAcademicYear");
+  $stmt = pdo_query_db($pdo,$sql);
+  $data= $stmt->fetch(PDO::FETCH_ASSOC);
+  $configured_year = $data['year'];
+
+  printf("現在は「%s年度」に設定されています。<br>",$configured_year);
+  printf('<select name="year">');
+
+  for($year=$current_year; $year>2011; $year--){
+    if($year == $configured_year){
+        printf("<option value='%s' selected>%s年度</option>", $year, $year);
+    }else{
+        printf("<option value='%s'>%s年度</option>", $year, $year);
+    }
+  }
+  $pdo = null;
+?>
+  </select>
+  <input type="submit" value="年度を設定する" />
+  </div>
+</form>
+-->
+</div>
+
+
+<div class="csvSubmitForm">
 <h1>総合テストデータ手動登録</h1>
+自動連携になったため登録できません 
+<!--
 <form action="./upload/upload.php" method="post" enctype="multipart/form-data">
 ファイル：<br />
 <input type="file" name="upfile" size="30" /><br />
@@ -54,8 +106,9 @@ include("../lib/displayUpdate.php");
   <input type="radio" name="lang" value="Cn"/>中国語
   <input type="radio" name="lang" value="Kr"/>韓国語
 </div>
-
+-->
 <!--過去年度への登録オプション -->
+<!--
 <div class="opAndClToggle">
   過去年度のDBへデータ登録する場合にはクリック
 </div>
@@ -83,7 +136,6 @@ include("../lib/displayUpdate.php");
   </select>
   <br /> 
 </div>
-
 <br/>
 <div>
 登録データの入手元<br>
@@ -93,8 +145,9 @@ include("../lib/displayUpdate.php");
   <input type="radio" name="old" value="1"/>
   <a href="https://lms.nii.ac.jp/mod/quiz/report.php?id=674&mode=overview" target="_blank">旧版（倫倫姫と学ぼう！情報倫理）</a>
 </div>
-
+-->
 <!--過去年度への登録（ここまで） -->
+<!--
 <br />
 <div>
 ファイルフォーマット<br />
@@ -104,10 +157,13 @@ include("../lib/displayUpdate.php");
 <br />
 <input type="submit" value="アップロード" />
 </form>
+-->
 </div>
 
 <div class="csvSubmitForm">
 <h1>コーストラッキングデータ手動登録</h1>
+自動連携になったため登録できません 
+<!--
 <form action="./upload/upload-tracking.php" method="post" enctype="multipart/form-data">
   ファイル：<br />
   <input type="file" name="upfile" size="30" /><br />
@@ -116,8 +172,9 @@ include("../lib/displayUpdate.php");
   <input type="radio" name="lang" value="En"/>英語
   <input type="radio" name="lang" value="Cn"/>中国語
   <input type="radio" name="lang" value="Kr"/>韓国語
-
+-->
 <!--過去年度への登録オプション -->
+<!--
   <div class="opAndClToggle">
   過去年度のDBへデータ登録する場合にはクリック
   </div>
@@ -163,53 +220,12 @@ include("../lib/displayUpdate.php");
   <input type="radio" name="separator" value="TSV" checked/>テキスト（TSV）形式
 </div>
   <br />
+-->
 <!--過去年度への登録（ここまで） -->
+<!--
   <input type="submit" value="アップロード" />
   <br />
-</form>
-</div>
-<div class="csvSubmitForm">
-<h1>年度の設定</h1>
-<form action="./upload/form-setAcademicYear.php" method="post" >
-<p>
-本システムでは，NIIがコースをリセットした時点で年度が替わることを想定しています。
-</p>
-<div style="margin-top: 10px; margin-bottom: 10px;">
-<?php
-  $current_year = date( "Y" );
-  $pdo = pdo_connect_db($logdb);
-  $sql = sprintf("select year from defaultAcademicYear");
-  $stmt = pdo_query_db($pdo,$sql);
-  $data= $stmt->fetch(PDO::FETCH_ASSOC);
-  $configured_year = $data['year'];
-
-  printf("現在は「%s年度」に設定されています。<br>",$configured_year);
-  printf('<select name="year">');
-
-  for($year=$current_year; $year>2011; $year--){
-    if($year == $configured_year){
-        printf("<option value='%s' selected>%s年度</option>", $year, $year);
-    }else{
-        printf("<option value='%s'>%s年度</option>", $year, $year);
-    }
-  }
-  $pdo = null;
-?>
-  </select>
-  <input type="submit" value="年度を設定する" />
-  </div>
-</form>
-</div>
-
-<div class="csvSubmitForm">
-<h1>コース情報初期連携</h1>
-<form action="./upload/sync-courseInfo.php" method="post" >
-<p>
-API連携を行なう場合，最初にコース情報を取得して本システムに登録する必要があります。
-</p>
-<div style="margin-top: 10px; margin-bottom: 10px;">
-  <input type="submit" value="コース情報を登録する" />
-  </div>
+-->
 </form>
 </div>
 
