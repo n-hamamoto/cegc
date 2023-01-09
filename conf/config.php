@@ -6,6 +6,10 @@ $logdb   = '';		#データベース名
 $inituser = '';		#最初に作るユーザ
 $eppnDomain = '';       #eppnで利用しているドメイン
 
+$token = '';		#gradesAPIのtoken
+$funcCourseID = '';	#コースモジュールIDの取得関数
+$funcReport = '';	#受講レポートの取得関数
+
 # 0: computedID, 1: storedID
 $sw = 0; 
 $salt = "";

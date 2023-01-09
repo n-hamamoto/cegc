@@ -22,8 +22,28 @@ include("../lib/menu.php");
 include("../lib/displayUpdate.php");
 ?>
 <div id="main">
+
 <div class="csvSubmitForm">
-<h1>総合テストデータ登録</h1>
+<h1>総合テストデータ自動登録</h1>
+<form action="./upload/sync-finaltest.php" method="post" enctype="multipart/form-data">
+  <input type="radio" name="syncall" value="0" checked/>更新データのみを取得<br>
+  <input type="radio" name="syncall" value="1"/>現在のデータを削除して全データを取得<br>
+<input type="submit" value="登録" />
+</form>
+</div>
+
+<div class="csvSubmitForm">
+<h1>コーストラッキングデータ自動登録</h1>
+<form action="./upload/sync-tracking.php" method="post" enctype="multipart/form-data">
+  <input type="radio" name="syncall" value="0" checked/>更新データのみを取得<br>
+  <input type="radio" name="syncall" value="1"/>現在のデータを削除して全データを取得<br>
+
+  <input type="submit" value="登録" />
+</form>
+</div>
+
+<div class="csvSubmitForm">
+<h1>総合テストデータ手動登録</h1>
 <form action="./upload/upload.php" method="post" enctype="multipart/form-data">
 ファイル：<br />
 <input type="file" name="upfile" size="30" /><br />
@@ -85,8 +105,9 @@ include("../lib/displayUpdate.php");
 <input type="submit" value="アップロード" />
 </form>
 </div>
+
 <div class="csvSubmitForm">
-<h1>コーストラッキングデータ登録</h1>
+<h1>コーストラッキングデータ手動登録</h1>
 <form action="./upload/upload-tracking.php" method="post" enctype="multipart/form-data">
   ファイル：<br />
   <input type="file" name="upfile" size="30" /><br />
@@ -179,6 +200,19 @@ include("../lib/displayUpdate.php");
   </div>
 </form>
 </div>
+
+<div class="csvSubmitForm">
+<h1>コース情報初期連携</h1>
+<form action="./upload/sync-courseInfo.php" method="post" >
+<p>
+API連携を行なう場合，最初にコース情報を取得して本システムに登録する必要があります。
+</p>
+<div style="margin-top: 10px; margin-bottom: 10px;">
+  <input type="submit" value="コース情報を登録する" />
+  </div>
+</form>
+</div>
+
 </div>
 </body>
 </html>

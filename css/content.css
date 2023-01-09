@@ -169,7 +169,8 @@ div.score {
 }
 div.date {
     display: inline-block;
-    width:250px;
+    /*width:250px;*/
+    width:auto;
 }
 div.tracking {
     position: fixed;
