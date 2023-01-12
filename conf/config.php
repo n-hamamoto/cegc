@@ -10,6 +10,10 @@ $token = '';		#gradesAPIのtoken
 $funcCourseID = '';	#コースモジュールIDの取得関数
 $funcReport = '';	#受講レポートの取得関数
 
+$printPassingStatus = 0;        # 合格判定に基づいた結果表示(1)，表示しない(0)
+$passingScore = 18;             # 新りんりん姫での合格点設定
+$requireCompleteCourses = 1;    # 新りんりん姫でコース受講必須(1)，不要(0)設定
+
 # 0: computedID, 1: storedID
 $sw = 0; 
 $salt = "";
