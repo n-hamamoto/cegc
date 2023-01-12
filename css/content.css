@@ -159,9 +159,7 @@ div.csvSubmitForm {
     padding: 30px 50px;
     margin: 10px;
     display: inline-block;
-}
-textarea {
-    height: 300px;
+    vertical-align: top;
 }
 div.score {
     display: inline-block;
@@ -211,4 +209,31 @@ div#groupField h4 {
     font-size: 110%;
     margin: 10px 0 5px 0;
     border-bottom: 1px black solid;
+}
+
+input[type="submit"], input[type="button"] {
+/* input要素のうちtype属性値がbuttonのものに対して装飾 */
+	padding: 5px 10px;
+	margin:  5px 0px;
+	border: 1px solid #000066;
+	border-radius: 0.3em;      
+}
+
+input[type="text"] {
+        padding: 5px 5px;
+        margin:  5px 0px;
+	width: 200px;
+}
+
+textarea {
+        padding: 5px 10px;
+        margin:  5px 0px;
+	width: 200px;
+	height: 300px;
+	font-size: 150%;
+}
+
+select {
+	padding: 5px 10px;
+	margin: 5px 0px;
 }

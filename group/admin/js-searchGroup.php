@@ -15,14 +15,14 @@ $stmt = $pdo->prepare("select groupId from groupAdmin where userId = ? order by 
 $stmt->execute( array( $userId ) );
 
 while($data = $stmt->fetch(PDO::FETCH_ASSOC)){
-  $adminGids[] = $data[groupId];//配列に要素を追加(pushと同等)
+  $adminGids[] = $data['groupId'];//配列に要素を追加(pushと同等)
 }
 
 //年度を取得
 $sql = "SELECT DISTINCT year from groupInfo order by year desc";
 $stmt = pdo_query_db($pdo, $sql);
 while($data = $stmt->fetch(PDO::FETCH_ASSOC)){
-    $years[]=$data[year];//配列に要素を追加(pushと同等)
+    $years[]=$data['year'];//配列に要素を追加(pushと同等)
 }
 
 //チェックボックス出力
@@ -34,29 +34,29 @@ foreach($years as $y){
 
   	$checked = "";
         foreach($adminGids as $gid){
-    		if($data[groupId] === $gid){
+    		if($data['groupId'] === $gid){
       			$checked = "checked";
     		}
   	}
 
   	print "<span class='checkbox'>";
   	print "<label for='";
-  	xss_char_echo($data[groupId]);
+  	xss_char_echo($data['groupId']);
   	print "'>";
   	print "<input type='checkbox' name='groupId[]' id='";
-  	xss_char_echo($data[groupId]);
+  	xss_char_echo($data['groupId']);
   	print "' value='";
-  	xss_char_echo($data[groupId]);
+  	xss_char_echo($data['groupId']);
   	print "' ";
   	xss_char_echo($checked);
   	print "> ";
-  	xss_char_echo($data[groupName]);
+  	xss_char_echo($data['groupName']);
   	print " (";
-  	xss_char_echo($data[year]);
+  	xss_char_echo($data['year']);
   	print ")";
   	print "</label>";
   	print "</span>";        
-	//print "$data[year], $data[groupId], $data[groupName]"."<br>";
+	//print "$data['year'], $data['groupId'], $data['groupName']"."<br>";
     }
 }
 ?>

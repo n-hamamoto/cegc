@@ -27,7 +27,7 @@ foreach($member as $m){
 
 $pdo = null;
 
-print "グループメンバーを変更しました。";
+print "<p>グループメンバーを変更しました。</p>";
 print '<input type="button" value="OK" onclick="location.reload();" /> ';
 
 //print "$groupId<br>";

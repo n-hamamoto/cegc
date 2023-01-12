@@ -9,7 +9,9 @@ function update_niiMoodleLog($lang, $year, $logtable, $logdb, $eppnDomain, $last
 
 	include("../auth/login.php");
 
-	print "Recieving the $lang data after ".date('Y-m-d H:i:s',$lastupdate)." from GakuNinLMS.".$br;
+	if($lastupdate > 0){
+		print "Recieving the $lang data after ".date('Y-m-d H:i:s',$lastupdate)." from GakuNinLMS.".$br;
+	}
 
         $cmids  = array();
         $mnames = array();

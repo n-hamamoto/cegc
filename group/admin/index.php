@@ -16,7 +16,7 @@ $stmt= pdo_query_db($pdo, $sql);
 
 $i=0;
 while($data = $stmt->fetch(PDO::FETCH_ASSOC)){
-  $uid[$i] = $data[userId];
+  $uid[$i] = $data['userId'];
   $i++;
 }
 $imax = $i;
@@ -26,9 +26,9 @@ $stmt= pdo_query_db($pdo, $sql);
 
 $j=0;
 while($data = $stmt->fetch(PDO::FETCH_ASSOC)){
-  $gid[$j]   = $data[groupId];
-  $gname[$j] = $data[groupName];
-  $year[$j]  = $data[year];
+  $gid[$j]   = $data['groupId'];
+  $gname[$j] = $data['groupName'];
+  $year[$j]  = $data['year'];
   $j++;
 }
 $jmax = $j;

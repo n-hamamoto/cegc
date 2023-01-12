@@ -21,8 +21,9 @@ $sql = sprintf("DELETE FROM groupAdmin where userId = ?");
 $stmt= $pdo->prepare($sql);
 $data= $stmt->execute( array( $userId ) );
 
+print "<p>";
 xss_char_echo($userId);
-print "を削除しました";
+print "を削除しました</p>";
 print '<input type="button" value="OK" onclick="location.reload();" /> ';
 
 //切断

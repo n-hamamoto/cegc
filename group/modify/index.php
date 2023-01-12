@@ -15,9 +15,9 @@ $stmt= pdo_query_db($pdo, $sql);
 
 $i=0;
 while($data = $stmt->fetch(PDO::FETCH_ASSOC)){
-  $id[$i] = $data[groupId];
-  $name[$i] = $data[groupName];
-  $year[$i] = $data[year];
+  $id[$i] = $data['groupId'];
+  $name[$i] = $data['groupName'];
+  $year[$i] = $data['year'];
   $i++;
 }
 $imax = $i;

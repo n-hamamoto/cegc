@@ -30,7 +30,7 @@ $stmt->execute( array($groupId) );
 
 $pdo = null;
 
-print "グループを削除しました<br>";
+print "<p>グループを削除しました</p>";
 print '<input type="button" value="OK" onclick="location.reload();" /> ';
 
 ?>

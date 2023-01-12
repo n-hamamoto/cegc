@@ -12,7 +12,9 @@ function update_niiMoodleTracking($lang, $year, $logtable, $logdb, $eppnDomain, 
  	$cmids  = array();
         $mnames = array();
 
-	print "Recieving the $lang data after ".date('Y-m-d H:i:s',$lastupdate)." from GakuNinLMS.".$br;
+	if($lastupdate > 0){
+		print "Recieving the $lang data after ".date('Y-m-d H:i:s',$lastupdate)." from GakuNinLMS.".$br;
+	}
 
         // DB接続
         $pdo = pdo_connect_db($logdb);
@@ -135,7 +137,7 @@ function update_niiMoodleTracking($lang, $year, $logtable, $logdb, $eppnDomain, 
 		//print "$logdb";
 		//print "$logtable";
 
-		for($i = 1; $i < count($arr); $i++ ){
+		for($i = 1; $i < count($arr)-1; $i++ ){
 
 			//タイムアウト対策で，とにかく出力（出力バッファの内容を送信）
 			@ob_flush(); @flush();

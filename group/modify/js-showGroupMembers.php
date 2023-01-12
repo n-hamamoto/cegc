@@ -13,7 +13,7 @@ $stmt->execute( array( $groupId) );
 
 $i=0;
 while($data= $stmt->fetch(PDO::FETCH_ASSOC)){
-  $uid[$i] = $data[idNumber];
+  $uid[$i] = $data['idNumber'];
   $i++;
 }
 $imax = $i;

@@ -31,7 +31,7 @@ $sql = "SELECT groupId from groupInfo where groupName = ? AND year = ? ";
 $stmt = $pdo->prepare($sql);
 $stmt->execute( array( $groupName, $year ) );
 $result= $stmt->fetch(PDO::FETCH_ASSOC);
-$groupId = $result[groupId];
+$groupId = $result['groupId'];
 
 $member = preg_split("/\n/",$memberList);
 
@@ -47,6 +47,6 @@ foreach($member as $m){
 //切断
 $pdo = null;
 
-print "グループを登録しました<br>";
+print "<p>グループを登録しました</p>";
 print '<input type="button" value="OK" onclick="location.reload();" /> ';
 ?>

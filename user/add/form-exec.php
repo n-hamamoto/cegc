@@ -36,8 +36,9 @@ $userId, $isAdmin, $isTeacher, $isSubAdmin, $isGroupAdmin,
 $isAdmin, $isTeacher, $isSubAdmin, $isGroupAdmin
 ) );
 
+print "<p>";
 xss_char_echo($userId);
-print "を作成しました";
+print "を作成しました</p>";
 print '<input type="button" value="OK" onclick="location.reload();" /> ';
 
 //切断
