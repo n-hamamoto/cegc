@@ -51,6 +51,8 @@ print "<option value='-1'>"."全"."</option>";
 </select>
 <input type="submit" value="Search" id="button">
 </p>
+<input type="checkbox" id="printFailedOnly" name="printFailedOnly" value="1">
+<label for="printFailedOnly">不合格者のみを表示する</label>
 </form>
 </div>
 <div id="resultField"> 

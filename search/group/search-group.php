@@ -11,46 +11,58 @@ include("../../conf/config.php");
 include("../../lib/dblib.php");
 include("../../lib/id.php");
 include("../../lib/function.php");
+include("../lib/printLogs.php");
 
 function print_score($pdo,$lang,$year,$eptid,$userid){
+	include("../../conf/config.php");
 
-//変数初期化
-  $score=""; $examdate="";
+	//変数初期化
+	$score=""; $examdate="";
 
-//現りんりん姫の検索
-  $table= "niiMoodleLog";
-  $stmt= $pdo->prepare("select FinalTest,End from ".$table." where ( eptid = ? and lang = ? ) or ( eptid = ? and lang = ? ) order by Start");
-  $stmt->execute( array( $eptid, $lang, $userid, $lang ) );
+	//現りんりん姫の検索
+	$oldflg = 0;
+	$res = getNiiMoodleLog($oldflg,$lang,$eptid,$userid);
 
-  while($data= $stmt->fetch(PDO::FETCH_ASSOC)){
-    if($data['FinalTest']>=80){
-      $score = $score."<strong>".htmlspecialchars($data['FinalTest'])."</strong><br>";
-    }else{
-      $score = $score.htmlspecialchars($data['FinalTest'])."<br>";
-    }
-    $examdate=$examdate.htmlspecialchars($data['End'])."<br>";
-  }
+	foreach($res as $data){
+    		if($data['FinalTest']>=$passingScore and $printPassingStatus == 1){
+      			$score = $score."<strong>".htmlspecialchars($data['FinalTest'])."</strong><br>";
+    		}else{
+      			$score = $score.htmlspecialchars($data['FinalTest'])."<br>";
+    		}
+    		$examdate=$examdate.htmlspecialchars($data['End'])."<br>";
+  	}
 
-//旧りんりん姫の検索
-  $table= "niiMoodleLog_old";
-  $stmt= $pdo->prepare("select FinalTest,End from ".$table." where ( eptid = ? and lang = ? ) or ( eptid = ? and lang = ? ) order by Start");
-  $stmt->execute( array( $eptid, $lang, $userid, $lang ) );
+	//旧りんりん姫の検索
+	$oldflg = 1;
+	$res = getNiiMoodleLog($oldflg,$lang,$eptid,$userid);
 
-  while($data= $stmt->fetch(PDO::FETCH_ASSOC)){
-    if($data['FinalTest']>=80){
-      $score = $score."<strong>".htmlspecialchars($data['FinalTest'])."</strong><br>";
-    }else{
-      $score = $score.htmlspecialchars($data['FinalTest'])."<br>";
-    }
-    $examdate=$examdate.htmlspecialchars($data['End'])."<br>";
-  }
+	foreach($res as $data){
+    		if($data['FinalTest']>=80){
+      			$score = $score."<strong>".htmlspecialchars($data['FinalTest'])."</strong><br>";
+    		}else{
+      			$score = $score.htmlspecialchars($data['FinalTest'])."<br>";
+    		}
+    		$examdate=$examdate.htmlspecialchars($data['End'])."<br>";
+  	}
 
-  print "<td>";
-  print $score;
-  print "</td>";
-  print "<td>";
-  print $examdate;
-  print "</td>";
+  	print "<td>";
+  	print $score;
+  	print "</td>";
+  	print "<td>";
+  	print $examdate;
+  	print "</td>";
+}
+
+/*
+  手続き開始
+*/
+
+$langs = array('Ja','En','Cn','Kr');
+
+if( isset($_POST['printFailedOnly']) ){
+	$printFailedOnly = $_POST['printFailedOnly'];
+}else{
+	$printFailedOnly = 0;
 }
 
 $pdo = pdo_connect_db($logdb);
@@ -67,11 +79,12 @@ $stmt->execute( array( $_POST['groupId'] ) );
 
 $i=0;
 while($data= $stmt->fetch(PDO::FETCH_ASSOC)){
-  $id[$i] = $data['idNumber'];
-  //print "$id[$i]<br>";
-  $i++;
+  	$id[$i] = $data['idNumber'];
+  	//print "$id[$i]<br>";
+  	$i++;
 }
 $imax = $i;
+
 print "<h1>";
 xss_char_echo($groupName);
 xss_char_echo($year);
@@ -79,39 +92,68 @@ print "</h1>";
 print "<table>";
 print "<tr>";
 print "<th>ユーザID</th>";
-print "<th colspan='2'>総合テスト(Ja)</th>";
-print "<th colspan='2'>総合テスト(En)</th>";
-print "<th colspan='2'>総合テスト(Cn)</th>";
-print "<th colspan='2'>総合テスト(Kr)</th>";
+foreach($langs as $lang){
+	if($printPassingStatus == 1){$colspan = 3;}else{$colspan = 2;};
+	print "<th colspan='".$colspan."'>総合テスト(".$lang.")</th>";
+}
 print "</tr>";
 print "<tr>";
 print "<th></th>";
-print "<th>得点</th>";
-print "<th>受験日時</th>";
-print "<th>得点</th>";
-print "<th>受験日時</th>";
-print "<th>得点</th>";
-print "<th>受験日時</th>";
-print "<th>得点</th>";
-print "<th>受験日時</th>";
+foreach($langs as $lang){
+	if($printPassingStatus == 1){
+		print "<th>合否</th>";
+	}
+	print "<th>得点</th>";
+	print "<th>受験日時</th>";
+}
 print "</tr>";
+
+
 for($i=0;$i<$imax;$i++){
   $eptid = getEptid($id[$i]);
 
-  print "<tr>";
-  // Japanese
-  print "<td>";
-  xss_char_echo($id[$i]);
-  print "</td>";
-  print_score($pdo,"Ja",$year,$eptid,$id[$i]);
-  // English
-  print_score($pdo,"En",$year,$eptid,$id[$i]);
-  // Chinise
-  print_score($pdo,"Cn",$year,$eptid,$id[$i]);
-  // Korean
-  print_score($pdo,"Kr",$year,$eptid,$id[$i]);
-  print "</tr>";
-}
+  $outall = 0;
+  $out = array();
+  $complete_ration = array();
+  if($printPassingStatus == 1){
+	foreach($langs as $lang){
+  		//合否判定
+  		[$out[$lang], $complete_ration[$lang]] = coursePassed($lang, $eptid, $id[$i]);
+		if($out[$lang] > 0){$outall = 1;}
+  	}
+  }
+
+  $print = 0;
+  if($printFailedOnly == 1 and $outall == 0){$print = 1;}
+  if($printFailedOnly != 1){$print = 1;}
+
+  if($print == 1){
+  	print "<tr>";
+  	print "<td>";
+  	xss_char_echo($id[$i]);
+  	print "</td>";
+
+  	foreach($langs as $lang){
+  		print"<td>";
+  		if($out[$lang] == 1){
+		print "合格(新)";
+  		}else if($out[$lang] == 2){
+		print "合格(旧)";
+  		}else if($out[$lang] == 3){
+		print "合格(新・旧)";
+  		}else{
+		print "不合格";
+  		};
+		if($out[$lang] != 2){
+		print "<br>(受講".$complete_ration[$lang]."%)";
+		}
+		print"</td>";
+
+  		print_score($pdo,$lang,$year,$eptid,$id[$i]);
+  	}
+  	print "</tr>";
+     }
+  }
 print "</table>";
 ?>
 </body>

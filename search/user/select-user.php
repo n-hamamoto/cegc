@@ -14,19 +14,44 @@ $userid = $_POST['name'];
 <script type="text/javascript" src="https://<?php echo $documentRoot ?>/js/resultField.js"></script>
 <?php
 
-/* DB接続 */
-$pdo = pdo_connect_db($logdb);
-
 $eptid = getEptid($userid);
 //print $eptid;
+
+$langs = array('Ja', 'En', 'Cn', 'Kr');
+
+if($printPassingStatus == 1){
+	foreach($langs as $lang){
+
+		$out = 0; 
+		$complete_ratio = 0;
+		[ $out, $complete_ratio ] = coursePassed($lang, $eptid, $userid);
+
+		if($out == 1){
+			print "合格(新)";
+		}else if($out == 2){
+			print "合格(旧)";
+		}else if($out == 3){
+			print "合格(新・旧)";
+		}else{
+			print "不合格";
+		};
+		print "(".$lang.")";
+		print "<br>";
+	}
+}
+
+/* DB接続 */
+$pdo = pdo_connect_db($logdb);
 
 //現りんりん姫のデータを表示
 $oldflg=0;
 
-$title = "総合テスト(Ja)";
-$lang = "Ja";
-printNiiMoodleLog($oldflg, $pdo, $lang, $title, $eptid, $userid);
+foreach($langs as $lang){
+	$title = "総合テスト(".$lang.")";
+	printNiiMoodleLog($oldflg, $pdo, $lang, $title, $eptid, $userid);
+}
 
+/*
 $title = "総合テスト(En)";
 $lang = "En";
 printNiiMoodleLog($oldflg,$pdo, $lang, $title, $eptid, $userid);
@@ -38,11 +63,15 @@ printNiiMoodleLog($oldflg,$pdo, $lang, $title, $eptid, $userid);
 $title = "総合テスト(Kr)";
 $lang = "Kr";
 printNiiMoodleLog($oldflg,$pdo, $lang, $title, $eptid, $userid);
+*/
 
-$lang="Ja";
-$title = "受講状況(Ja)";
-printNiiTrackingLog($oldflg,$pdo, $lang, $title, $eptid, $userid);
 
+foreach($langs as $lang){
+	$title = "受講状況(".$lang.")";
+	printNiiTrackingLog($oldflg,$pdo, $lang, $title, $eptid, $userid);
+}
+
+/*
 $lang="En";
 $title = "受講状況(En)";
 printNiiTrackingLog($oldflg,$pdo, $lang, $title, $eptid, $userid);
@@ -54,5 +83,5 @@ printNiiTrackingLog($oldflg,$pdo, $lang, $title, $eptid, $userid);
 $lang="Kr";
 $title = "受講状況(Kr)";
 printNiiTrackingLog($oldflg,$pdo, $lang, $title, $eptid, $userid);
-
+*/
 ?>

@@ -26,10 +26,10 @@ function print_lastupdate($pdo, $tbl, $lang){
 if($_SESSION["isAdmin"]=='1' || $_SESSION["isSubAdmin"]=='1'){
  print "<div class='updateNotice tracking'>";
  print "<div>最終更新（受講履歴）</div>";
- print_lastupdate($pdo,niiMoodleTracking,Ja);
- print_lastupdate($pdo,niiMoodleTracking,En);
- print_lastupdate($pdo,niiMoodleTracking,Cn);
- print_lastupdate($pdo,niiMoodleTracking,Kr);
+ print_lastupdate($pdo,'niiMoodleTracking','Ja');
+ print_lastupdate($pdo,'niiMoodleTracking','En');
+ print_lastupdate($pdo,'niiMoodleTracking','Cn');
+ print_lastupdate($pdo,'niiMoodleTracking','Kr');
  print"</div>";
 }
 ?>
@@ -41,10 +41,10 @@ if($_SESSION["isAdmin"]=='true'){
 }else{
  print "<div>最終更新</div>";
 }
- print_lastupdate($pdo,niiMoodleLog,Ja);
- print_lastupdate($pdo,niiMoodleLog,En);
- print_lastupdate($pdo,niiMoodleLog,Cn);
- print_lastupdate($pdo,niiMoodleLog,Kr);
+ print_lastupdate($pdo,'niiMoodleLog','Ja');
+ print_lastupdate($pdo,'niiMoodleLog','En');
+ print_lastupdate($pdo,'niiMoodleLog','Cn');
+ print_lastupdate($pdo,'niiMoodleLog','Kr');
  print "</div>";
 ?>
 
