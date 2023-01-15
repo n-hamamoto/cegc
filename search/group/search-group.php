@@ -86,8 +86,9 @@ while($data= $stmt->fetch(PDO::FETCH_ASSOC)){
 $imax = $i;
 
 print "<h1>";
-xss_char_echo($groupName);
 xss_char_echo($year);
+print "年度:";
+xss_char_echo($groupName);
 print "</h1>";
 print "<table>";
 print "<tr>";
@@ -128,7 +129,11 @@ for($i=0;$i<$imax;$i++){
   if($printFailedOnly != 1){$print = 1;}
 
   if($print == 1){
-  	print "<tr>";
+	if($outall ==1){
+  		print "<tr class='passed'>";
+	}else{
+  		print "<tr class='failed'>";
+	}
   	print "<td>";
   	xss_char_echo($id[$i]);
   	print "</td>";

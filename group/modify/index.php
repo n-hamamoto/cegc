@@ -61,7 +61,7 @@ $pdo = null;
 </p>
 <div id="memberField">
 </div>
-<input type="submit" value="変更する" id="button" disabled>
+<input type="submit" value="グループを変更" id="button" disabled>
 </form>
 </div>
 <div id="resultField"> 

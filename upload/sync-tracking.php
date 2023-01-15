@@ -16,8 +16,16 @@ if($_SESSION["isAdmin"] === "1" || $_SESSION["isSubAdmin"] === "1"){}else{
 $logtable = 'niiMoodleTracking';
 $lang = array('Ja','En','Kr','Cn');
 $year = '2022';
-$syncall = $_POST['syncall'];
-//$syncall = 0; // 1: データを全て取り直す, 0: 差分をとってくる
+
+echo date('YMD H:i:s');
+print " sync tracking start";
+
+if( isset($_POST['syncall']) ){
+        $syncall = $_POST['syncall'];
+}else{
+        $syncall = 0; // 1: データを全て取り直す, 0: 差分をとってくる
+}
+//$syncall = $_POST['syncall'];
 
 // DB接続
 $pdo = pdo_connect_db($logdb);

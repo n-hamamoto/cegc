@@ -20,10 +20,6 @@ if($_SESSION["isAdmin"] === "1" || $_SESSION["isGroupAdmin"] === "1"){}else{
 <form id="inputForm" method="post" action="group/add/form-exec.php" enctype="multipart/form-data">
 <span>グループ名:</span>
 <br />
-<input type="text" name="groupName">
-<br />
-<span>年度:</span>
-<br />
 <select name="year">
 <?php
   $thisYear = date("Y");
@@ -32,6 +28,8 @@ if($_SESSION["isAdmin"] === "1" || $_SESSION["isGroupAdmin"] === "1"){}else{
   }
 ?>
 </select>
+<span>年度:</span>
+<input type="text" name="groupName">
 <br />
 <span>メンバー一覧：1行に1ユーザを記入してください</span>
 <br />
@@ -41,7 +39,7 @@ if($_SESSION["isAdmin"] === "1" || $_SESSION["isGroupAdmin"] === "1"){}else{
 <input type="file" name="upfile" /><br />
 -->
 <br />
-<input type="submit" value="グループ登録" />
+<input type="submit" value="グループを登録" />
 </form>
 </div>
 <?php

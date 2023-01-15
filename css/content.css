@@ -237,3 +237,23 @@ select {
 	padding: 5px 10px;
 	margin: 5px 0px;
 }
+
+tr.passed {
+	background-color: #def9ff;
+}
+tr.failed {
+	background-color: #ffd9d1;
+}
+
+div.yearhead {
+	margin: 10px 0;
+	font-size: 150%;
+}
+
+div.passingStatus span{
+	display: inline-block;
+	width: 150px;
+}
+div.passingStatus span.passed {
+	font-weight: bold;
+}

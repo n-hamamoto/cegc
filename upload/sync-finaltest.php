@@ -16,8 +16,16 @@ if($_SESSION["isAdmin"] === "1" || $_SESSION["isSubAdmin"] === "1"){}else{
 $logtable = 'niiMoodleLog';
 $lang = array('Ja','En','Kr','Cn');
 $year = '2022';
-$syncall = $_POST['syncall'];
-//$syncall = 0; // 1: データを全て取り直す, 0: 差分をとってくる
+
+echo date('Y-m-d H:i:s');
+print " sync finaltest start";
+
+// print($_POST['syncall']);
+if( isset($_POST['syncall']) ){
+	$syncall = $_POST['syncall'];
+}else{
+	$syncall = 0; // 1: データを全て取り直す, 0: 差分をとってくる
+}
 
 //この日時以降のデータを取得
 //$date = new DateTime('2022-10-10 00:00:00');

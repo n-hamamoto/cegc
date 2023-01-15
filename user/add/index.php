@@ -46,7 +46,7 @@ print '
 }
 ?>
 </div>
-<input type="submit" value="登録" id="button">
+<input type="submit" value="ユーザを登録" id="button">
 </p>
 </form>
 </div>

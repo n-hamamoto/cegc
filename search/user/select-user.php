@@ -20,6 +20,8 @@ $eptid = getEptid($userid);
 $langs = array('Ja', 'En', 'Cn', 'Kr');
 
 if($printPassingStatus == 1){
+	print "<h2>合否判定</h2>";
+	print "<div class=\"passingStatus\">";
 	foreach($langs as $lang){
 
 		$out = 0; 
@@ -27,17 +29,18 @@ if($printPassingStatus == 1){
 		[ $out, $complete_ratio ] = coursePassed($lang, $eptid, $userid);
 
 		if($out == 1){
-			print "合格(新)";
+			print "<span class=\"passed\">合格(新)";
 		}else if($out == 2){
-			print "合格(旧)";
+			print "<span class=\"passed\">合格(旧)";
 		}else if($out == 3){
-			print "合格(新・旧)";
+			print "<span class=\"passed\">合格(新・旧)";
 		}else{
-			print "不合格";
+			print "<span class=\"failed\">不合格";
 		};
 		print "(".$lang.")";
-		print "<br>";
+		print "</span>";
 	}
+	print "</div>";
 }
 
 /* DB接続 */

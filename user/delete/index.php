@@ -42,7 +42,7 @@ userId: <select name="userId">
   }
 ?>
 </select>
-<input type="submit" value="Delete" id="button">
+<input type="submit" value="ユーザを削除" id="button">
 </p>
 </form>
 </div>
