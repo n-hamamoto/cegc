@@ -5,6 +5,7 @@ include_once("../auth/login.php");
 include_once("../lib/dblib.php");
 require_once("../lib/callReportAPI.php");
 require_once("../lib/update_niiMoodleLog.php");
+require_once("../lib/printLog.php");
 
 //権限のない人はログアウト
 if($_SESSION["isAdmin"] === "1" || $_SESSION["isSubAdmin"] === "1"){}else{
@@ -17,8 +18,10 @@ $logtable = 'niiMoodleLog';
 $lang = array('Ja','En','Kr','Cn');
 $year = '2022';
 
-echo date('Y-m-d H:i:s');
-print " sync finaltest start";
+printLog("sync finaltest start");
+
+//echo date('Y-m-d H:i:s');
+//print " sync finaltest start";
 
 // print($_POST['syncall']);
 if( isset($_POST['syncall']) ){
@@ -34,12 +37,12 @@ if( isset($_POST['syncall']) ){
 
 // DB接続
 $pdo = pdo_connect_db($logdb);
-$sql = 'SELECT max(updated_at) from niiMoodleLog where lang = ? and year = ?';
+$sql = 'SELECT max(updated_at) from niiMoodleLog where lang = ? and year = ? and eptid != ?';
 $stmt = $pdo->prepare($sql);
 
 foreach($lang as $l){
 	//echo $l;
-	$executed = $stmt->execute( array( $l, $year ) );
+	$executed = $stmt->execute( array( $l, $year, 'dummy' ) );
 	if($executed){
 		$data = $stmt->fetch();
 		$lastupdate = new Datetime($data[0]);

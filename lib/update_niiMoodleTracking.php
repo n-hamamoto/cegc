@@ -1,9 +1,6 @@
 <?php
-
-//include_once("../conf/config.php");
-//include_once("../lib/dblib.php");
-
-//require("callReportAPI.php");
+include_once("../lib/printLog.php");
+include_once("../lib/updateDummy.php");
 
 function update_niiMoodleTracking($lang, $year, $logtable, $logdb, $eppnDomain, $lastupdate){
 
@@ -13,24 +10,26 @@ function update_niiMoodleTracking($lang, $year, $logtable, $logdb, $eppnDomain, 
         $mnames = array();
 
 	if($lastupdate > 0){
-		print "Recieving the $lang data after ".date('Y-m-d H:i:s',$lastupdate)." from GakuNinLMS.".$br;
+		$log = "Recieving the $lang data after ".date('Y-m-d H:i:s',$lastupdate)." from GakuNinLMS.";
+		printLog($log);
 	}
 
         // DB接続
         $pdo = pdo_connect_db($logdb);
         //データ検索用sql準備
 	if($lang == 'Ja'){
-        	$sql = "SELECT * from courseInfo where modname = 'scorm' and courseshortname = 'rinrin_security-ja'";
+		$shortname = 'rinrin_security-ja';
 	}
 	if($lang == 'En'){
-        	$sql = "SELECT * from courseInfo where modname = 'scorm' and courseshortname = 'rinrin_security-en'";
+		$shortname = 'rinrin_security-en';
 	}
 	if($lang == 'Kr'){
-        	$sql = "SELECT * from courseInfo where modname = 'scorm' and courseshortname = 'rinrin_security-kr'";
+		$shortname = 'rinrin_security-kr';
 	}
 	if($lang == 'Cn'){
-        	$sql = "SELECT * from courseInfo where modname = 'scorm' and courseshortname = 'rinrin_security-cn'";
+		$shortname = 'rinrin_security-cn';
 	}
+        $sql = "SELECT * from courseInfo where modname = 'scorm' and courseshortname = '".$shortname."' and visibility = 1";
         //print $sql."\n";
         $stmt = $pdo->prepare($sql);
 	try {
@@ -45,67 +44,14 @@ function update_niiMoodleTracking($lang, $year, $logtable, $logdb, $eppnDomain, 
 		array_push($mnames, $result['modinstancename']);
 	}
 
-// APIでCourseIDを取得
-/*
-        $html = callReportAPI(0, '', '', '');
-        $obj = json_decode($html);
-        foreach($obj as $o){
-                //print "###\n";
-                //var_dump($o);
-                //print $o->modinstancename."\n";
-                //print $o->courseshortname."\n";
-                //print $o->modname."\n";
-                //print $o->visibility."\n";
-                //print $o->coursemoduleid."\n";
-
-		if($o->modname == "scorm"){
-                if($lang=='Ja'){
-                        if($o->courseshortname == "rinrin_security-ja"){
-                                $cmid = $o->coursemoduleid;
-                		print $o->modinstancename." $cmid\n";
-				array_push($cmids, $cmid);
-				array_push($mnames, $o->modinstancename);
-                        }
-                }
-                if($lang=='En'){
-                        if($o->courseshortname == "rinrin_security-en"){
-                                $cmid = $o->coursemoduleid;
-				array_push($cmids, $cmid);
-				array_push($mnames, $o->modinstancename);
-                        }
-                }
-                if($lang=='Kr'){
-                        if($o->courseshortname == "rinrin_security-kr"){
-                                $cmid = $o->coursemoduleid;
-				array_push($cmids, $cmid);
-				array_push($mnames, $o->modinstancename);
-                        }
-                }
-                if($lang=='Cn'){
-                        if($o->courseshortname == "rinrin_security-cn"){
-                                $cmid = $o->coursemoduleid;
-				array_push($cmids, $cmid);
-				array_push($mnames, $o->modinstancename);
-                        }
-		}
-		}
-	}
-*/
-//	for($i=0; $i<count($cmids); $i++){
-//		print "$cmids[$i] $mnames[$i]\n";
-//	}
-/*
-	if($lang=='Ja'){ $cmid = 1275; };
-	if($lang=='En'){ $cmid = 1267; };
-	if($lang=='Kr'){ $cmid = 1259; };
-	if($lang=='Cn'){ $cmid = 1251; };
-*/
-
 	//courseidの分だけループ
         for($ii=0; $ii<count($cmids); $ii++){
-                print $br."----------------------------------------".$br;
-                print "$cmids[$ii] $mnames[$ii]";
-                print $br."----------------------------------------".$br;
+                printLog("----------------------------------------");
+                printLog("$cmids[$ii] $mnames[$ii]");
+                //printLog("----------------------------------------");
+		//タイムアウト対策で，とにかく出力（出力バッファの内容を送信）
+		@ob_flush(); @flush();
+		
 		$cmid = $cmids[$ii];
 
 		// APIでGLMSからTrackingの結果を取得
@@ -116,7 +62,13 @@ function update_niiMoodleTracking($lang, $year, $logtable, $logdb, $eppnDomain, 
 		//var_dump($arr);
 
 		$records = count($arr)-2;
-		print "$records Records Recieved.".$br;
+		if($records >= 0 ){
+			printLog("$lang : $records Records Recieved.");
+		}else{
+			printLog("$lang : error -- response dump");
+			var_dump($arr);
+			print $br;
+		}
 
 		//print "$logtable $logdb";
 		// DB接続
@@ -124,7 +76,7 @@ function update_niiMoodleTracking($lang, $year, $logtable, $logdb, $eppnDomain, 
 
 		//テーブルのクリア
 		if($lastupdate == ''){
-			print "Clear existing records\n";
+			printLog("Clear existing records");
 			$sql='DELETE FROM '.$logtable.' where lang = ? and year = ? and cmid = ?';
 			$stmt = $pdo->prepare($sql);
 			$executed = $stmt->execute( array( $lang, $year, $cmid) );
@@ -133,9 +85,6 @@ function update_niiMoodleTracking($lang, $year, $logtable, $logdb, $eppnDomain, 
 		//データ追加用sql準備
 		$sql = 'INSERT INTO '.$logtable.' (lang, year, cmid, eptid, Count, Start, LastAccess, Score) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
 		$stmt = $pdo->prepare($sql);
-		//print $sql.$br;
-		//print "$logdb";
-		//print "$logtable";
 
 		for($i = 1; $i < count($arr)-1; $i++ ){
 
@@ -143,10 +92,7 @@ function update_niiMoodleTracking($lang, $year, $logtable, $logdb, $eppnDomain, 
 			@ob_flush(); @flush();
 
 			$v = $arr[$i];
-			print "No.".$i.": ";
-//			print "\n";
-//			print $v;
-//			print "$br";
+			printLog("No.".$i.": ");
 
 			$arg = array();
 			$row = array();
@@ -190,7 +136,7 @@ function update_niiMoodleTracking($lang, $year, $logtable, $logdb, $eppnDomain, 
         		}
 
 	//		var_dump($rowdata);
-			print "$arg[0], $arg[1], $arg[2], $arg[3], $arg[4], $arg[5], $arg[6] $arg[7]".$br;
+			printLog("$arg[0], $arg[1], $arg[2], $arg[3], $arg[4], $arg[5], $arg[6] $arg[7]");
 
 			//SQL実行
 /* */
@@ -203,5 +149,31 @@ function update_niiMoodleTracking($lang, $year, $logtable, $logdb, $eppnDomain, 
 /* */
 		}
 	}
+
+	//アップデート日時登録用のダミーデータを登録
+	updateDummy($logtable, $lang, $year);
+/*
+	//旧dummyを削除
+	$sql = 'DELETE FROM '.$logtable.' where lang = ? and year = ? and eptid = ?';
+	$stmt = $pdo->prepare($sql);
+
+        try{
+                $executed = $stmt->execute(array($lang, $year, 'dummy'));
+        } catch (Exception $e){
+                print('Import Error:'.$e->getMessage());
+                die();
+        }
+
+	//dummyを登録
+	$sql = 'INSERT INTO '.$logtable.' (lang, year, eptid) VALUES (?, ?, ?)';
+	$stmt = $pdo->prepare($sql);
+
+	try{
+		$executed = $stmt->execute( array($lang, $year, 'dummy') );
+	} catch (Exception $e){
+		print('Import Error:'.$e->getMessage());
+		die();
+	}
+*/
 }
 ?>

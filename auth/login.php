@@ -6,7 +6,9 @@ if($_SESSION["auth"]==="true"){
   $br = "<br>";
 }
 else{
-  header("Location: https://".$documentRoot."logout.php");
   $br = "\n";
+  if( headers_sent() ){}else{
+	header("Location: https://".$documentRoot."logout.php");
+  }
 }
 ?>

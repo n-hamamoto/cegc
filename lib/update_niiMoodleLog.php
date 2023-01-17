@@ -1,16 +1,14 @@
 <?php
-
-include_once("../conf/config.php");
-//include_once("../lib/dblib.php");
-
-//require("callReportAPI.php");
+include_once("../lib/printLog.php");
+include_once("../lib/updateDummy.php");
 
 function update_niiMoodleLog($lang, $year, $logtable, $logdb, $eppnDomain, $lastupdate){
 
 	include("../auth/login.php");
 
 	if($lastupdate > 0){
-		print "Recieving the $lang data after ".date('Y-m-d H:i:s',$lastupdate)." from GakuNinLMS.".$br;
+		$log = "Recieving the $lang data after ".date('Y-m-d H:i:s',$lastupdate)." from GakuNinLMS.";
+		printLog($log);
 	}
 
         $cmids  = array();
@@ -20,19 +18,21 @@ function update_niiMoodleLog($lang, $year, $logtable, $logdb, $eppnDomain, $last
         $pdo = pdo_connect_db($logdb);
         //データ検索用sql準備
         if($lang == 'Ja'){
-                $sql = "SELECT * from courseInfo where modname = 'quiz' and courseshortname = 'rinrin_security-ja' and visibility = 1";
+		$shortname='rinrin_security-ja';
         }
         if($lang == 'En'){
-                $sql = "SELECT * from courseInfo where modname = 'quiz' and courseshortname = 'rinrin_security-en' and visibility = 1";
+		$shortname='rinrin_security-en';
         }
         if($lang == 'Kr'){
-                $sql = "SELECT * from courseInfo where modname = 'quiz' and courseshortname = 'rinrin_security-kr' and visibility = 1";
+		$shortname='rinrin_security-kr';
         }
         if($lang == 'Cn'){
-                $sql = "SELECT * from courseInfo where modname = 'quiz' and courseshortname = 'rinrin_security-cn' and visibility = 1";
+		$shortname='rinrin_security-cn';
         }
-        //print $sql.$br;
-        $stmt = $pdo->prepare($sql);
+	$sql = "SELECT * from courseInfo where modname = 'quiz' and courseshortname = '".$shortname."' and visibility = 1";
+        //print $sql;
+	
+	$stmt = $pdo->prepare($sql);
         try {
                 $executed = $stmt->execute();
         } catch (Exception $e){
@@ -40,51 +40,12 @@ function update_niiMoodleLog($lang, $year, $logtable, $logdb, $eppnDomain, $last
                 die();
         }
         while($result = $stmt->fetch(PDO::FETCH_ASSOC)){
-                print $result['coursemoduleid'].": ".$result['modinstancename'].$br;
+		//printLog($result['coursemoduleid'].": ".$result['modinstancename']);
                 array_push($cmids,  $result['coursemoduleid']);
                 array_push($mnames, $result['modinstancename']);
         }
 	$cmid  = $cmids[0];
 	$mname = $mnames[0];
-/*
-	$html = callReportAPI(0, '', '', '');
-	$obj = json_decode($html);
-	foreach($obj as $o){
-		//print "###\n";
-		//var_dump($o);
-		//print $o->modinstancename."\n"; 
-		//print $o->courseshortname."\n"; 
-		//print $o->modname."\n"; 
-		//print $o->visibility."\n"; 
-		//print $o->coursemoduleid."\n"; 
-	
-		if($lang=='Ja'){
-			if($o->courseshortname == "rinrin_security-ja" && $o->modname == "quiz"){
-				$cmid = $o->coursemoduleid;
-			}
-		}
-                if($lang=='En'){
-                        if($o->courseshortname == "rinrin_security-en" && $o->modname == "quiz"){
-                                $cmid = $o->coursemoduleid;
-                        }
-                }
-                if($lang=='Kr'){
-                        if($o->courseshortname == "rinrin_security-cn" && $o->modname == "quiz"){
-                                $cmid = $o->coursemoduleid;
-                        }
-                }
-                if($lang=='Cn'){
-                        if($o->courseshortname == "rinrin_security-kr" && $o->modname == "quiz"){
-                                $cmid = $o->coursemoduleid;
-                        }
-                }
-	}
-	//print "cmid: $cmid\n";
-*/
-	//if($lang=='Ja'){ $cmid = 1565; };
-	//if($lang=='En'){ $cmid = 1566; };
-	//if($lang=='Kr'){ $cmid = 1567; };
-	//if($lang=='Cn'){ $cmid = 1568; };
 
 	// APIでGLMSからfinalTestの結果を取得
 	$html = callReportAPI(1, $cmid, $lastupdate, '');
@@ -93,8 +54,14 @@ function update_niiMoodleLog($lang, $year, $logtable, $logdb, $eppnDomain, $last
 	$arr = preg_split("/\n/", $html);
 	//var_dump($arr);
 
-	$records = count($arr)-2;
-	print "$records Records Recieved.".$br;
+        $records = count($arr)-2;
+        if($records >= 0 ){
+     		printLog("$lang : $records Records Recieved.");
+       	}else{
+         	printLog("$lang : error -- response dump");
+           	var_dump($arr);
+              	print $br;
+      	}
 
 
 	//print "$logtable $logdb";
@@ -103,7 +70,7 @@ function update_niiMoodleLog($lang, $year, $logtable, $logdb, $eppnDomain, $last
 
 	//テーブルのクリア
 	if($lastupdate == ''){
-		print "Clear existing records\n";
+		printLog("Clear existing records");
 		$sql='DELETE FROM '.$logtable.' where lang = ? and year = ?';
 		$stmt = $pdo->prepare($sql);
 		$executed = $stmt->execute( array( $lang, $year) );
@@ -145,7 +112,7 @@ function update_niiMoodleLog($lang, $year, $logtable, $logdb, $eppnDomain, $last
 			$rowdata[2] = $tmp[0];
         	}
 
-		print "$row[2], $row[3], $row[4], $row[5], $row[6], $row[7]\n";
+		//printLog("$row[2], $row[3], $row[4], $row[5], $row[6], $row[7]");
 
 		//Startをdatetimeにする
 		$patten = '/(\d+)\/(\d+)\/(\d+)\s+(\d+):(\d+):(\d+)/';
@@ -178,7 +145,7 @@ function update_niiMoodleLog($lang, $year, $logtable, $logdb, $eppnDomain, $last
 			$rowdata[7]=null;
 		}
 		
-		print "$rowdata[0], $rowdata[1], $rowdata[2], $rowdata[3], $rowdata[4], $rowdata[5], $rowdata[6], $rowdata[7]".$br;
+		printLog("$rowdata[0], $rowdata[1], $rowdata[2], $rowdata[3], $rowdata[4], $rowdata[5], $rowdata[6], $rowdata[7]");
 
 		//SQL実行
 		try{
@@ -188,5 +155,8 @@ function update_niiMoodleLog($lang, $year, $logtable, $logdb, $eppnDomain, $last
 			die();
 		}
 	}
+
+        //アップデート日時登録用のダミーデータを登録
+        updateDummy($logtable, $lang, $year);
 }
 ?>

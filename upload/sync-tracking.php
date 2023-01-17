@@ -5,6 +5,7 @@ include_once("../auth/login.php");
 include_once("../lib/dblib.php");
 require_once("../lib/callReportAPI.php");
 require_once("../lib/update_niiMoodleTracking.php");
+require_once("../lib/printLog.php");
 
 //権限のない人はログアウト
 if($_SESSION["isAdmin"] === "1" || $_SESSION["isSubAdmin"] === "1"){}else{
@@ -17,8 +18,9 @@ $logtable = 'niiMoodleTracking';
 $lang = array('Ja','En','Kr','Cn');
 $year = '2022';
 
-echo date('YMD H:i:s');
-print " sync tracking start";
+printLog("sync tracking start");
+//echo date('YMD H:i:s');
+//print " sync tracking start";
 
 if( isset($_POST['syncall']) ){
         $syncall = $_POST['syncall'];
@@ -29,7 +31,7 @@ if( isset($_POST['syncall']) ){
 
 // DB接続
 $pdo = pdo_connect_db($logdb);
-$sql = 'SELECT max(updated_at) from '.$logtable.' where lang = ? and year = ?';
+$sql = 'SELECT max(updated_at) from '.$logtable." where lang = ? and year = ? and eptid != 'dummy'";
 $stmt = $pdo->prepare($sql);
 
 foreach($lang as $l){

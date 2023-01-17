@@ -61,4 +61,3 @@ function callReportAPI($func, $cmid, $from, $to){
 	return  $html;
 }
 ?>
-

@@ -61,7 +61,11 @@ function printNiiMoodleLog($oldflg, $pdo, $lang, $title, $eptid, $userid){
      		if($value["FinalTest"] >= $passingScore and $printPassingStatus == 1){print "</strong>";}
      		print "</div>";
      		print "<div class='date'>";
-     		print "受験終了日時 ".$value["End"]."(".$value['ElapsedTime']."秒)";
+		if( is_numeric($value['ElapsedTime']) ){
+			print "受験終了日時 ".$value["End"]."(".$value['ElapsedTime']."秒)";
+     		}else{
+			print "受験終了日時 ".$value["End"]."(".$value['ElapsedTime'].")";
+		}
      		print "</div>";
      		print "</div>";
 	}
