@@ -115,11 +115,11 @@ for($i=0;$i<$imax;$i++){
 
   $outall = 0;
   $out = array();
-  $complete_ration = array();
+  $complete_ratio = array();
   if($printPassingStatus == 1){
 	foreach($langs as $lang){
   		//合否判定
-  		[$out[$lang], $complete_ration[$lang]] = coursePassed($lang, $eptid, $id[$i]);
+  		[$out[$lang], $complete_ratio[$lang]] = coursePassed($lang, $eptid, $id[$i]);
 		if($out[$lang] > 0){$outall = 1;}
   	}
   }
@@ -150,7 +150,7 @@ for($i=0;$i<$imax;$i++){
 		print "不合格";
   		};
 		if($out[$lang] != 2){
-		print "<br>(受講".$complete_ration[$lang]."%)";
+		print "<br>(受講".$complete_ratio[$lang]."%)";
 		}
 		print"</td>";
 

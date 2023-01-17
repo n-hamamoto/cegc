@@ -111,6 +111,7 @@ function getNiiTrackingLog($oldflg, $lang, $eptid, $userid){
 
 //受講履歴を表示する
 function printNiiTrackingLog($oldflg, $pdo, $lang, $title, $eptid, $userid){
+	include_once("../../lib/function.php");
 
   	$res = getNiiTrackingLog($oldflg,$lang,$eptid,$userid);
 
@@ -128,7 +129,7 @@ function printNiiTrackingLog($oldflg, $pdo, $lang, $title, $eptid, $userid){
 
   	$empty=1;
 
-  	print "<h2 class='opAndClToggle'>$title</h2>";
+  	print "<h2 class='opAndClToggle'>".xss_char($title)."</h2>";
   	print "<div class='opAndClblock'>";
 
   	$i=0;
