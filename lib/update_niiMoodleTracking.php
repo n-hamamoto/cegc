@@ -82,9 +82,8 @@ function update_niiMoodleTracking($lang, $year, $logtable, $logdb, $eppnDomain, 
 			$executed = $stmt->execute( array( $lang, $year, $cmid) );
 		}
 	
-		//データ追加用sql準備
-		$sql = 'INSERT INTO '.$logtable.' (lang, year, cmid, eptid, Count, Start, LastAccess, Score) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-		$stmt = $pdo->prepare($sql);
+		//$sql = 'INSERT INTO '.$logtable.' (lang, year, cmid, eptid, Count, Start, LastAccess, Score) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+		//$stmt = $pdo->prepare($sql);
 
 		for($i = 1; $i < count($arr)-1; $i++ ){
 
@@ -92,7 +91,7 @@ function update_niiMoodleTracking($lang, $year, $logtable, $logdb, $eppnDomain, 
 			@ob_flush(); @flush();
 
 			$v = $arr[$i];
-			printLog("No.".$i.": ");
+			//printLog("No.".$i.": ");
 
 			$arg = array();
 			$row = array();
@@ -113,7 +112,7 @@ function update_niiMoodleTracking($lang, $year, $logtable, $logdb, $eppnDomain, 
 
 			if($row[0]==''){ continue; };   //空行をスキップ
 
-//			print "$row[0], $row[1], $row[2], $row[3], $row[4], $row[5]\n";
+			//print "$row[0], $row[1], $row[2], $row[3], $row[4], $row[5]".$br;
 
 			//3列目を学籍番号にする(xxxx@eppn -> xxxx)
 			$patten ='/^(.+)@'.$eppnDomain.'$/';
@@ -136,8 +135,49 @@ function update_niiMoodleTracking($lang, $year, $logtable, $logdb, $eppnDomain, 
         		}
 
 	//		var_dump($rowdata);
-			printLog("$arg[0], $arg[1], $arg[2], $arg[3], $arg[4], $arg[5], $arg[6] $arg[7]");
+			printLog("No. $i: $arg[0], $arg[1], $arg[2], $arg[3], $arg[4], $arg[5], $arg[6] $arg[7]");
 
+			//データを確認
+			$sql = "SELECT count(*) FROM $logtable where 
+				lang = '".$arg[0]."' AND
+				year = $arg[1] AND
+				cmid = $arg[2] AND
+				eptid = '".$arg[3]."' AND
+				Count = $arg[4] AND
+				Start = '".$arg[5]."' AND
+				LastAccess = '".$arg[6]."' AND
+				Score = $arg[7]";
+			$stmt = $pdo->prepare($sql);
+			try{
+                                $executed = $stmt->execute();
+				$count = $stmt->fetchColumn();
+                        } catch (Exception $e){
+                                print('Error:'.$e->getMessage());
+                                die();
+                        }
+			//重複データがあったら消す
+			if($count > 0){
+                        	$sql = "DELETE FROM $logtable where
+                                	lang = '".$arg[0]."' AND
+                                	year = $arg[1] AND
+                                	cmid = $arg[2] AND
+                                	eptid = '".$arg[3]."' AND
+                                	Count = $arg[4] AND
+                                	Start = '".$arg[5]."' AND
+                                	LastAccess = '".$arg[6]."' AND
+                                	Score = $arg[7]";
+                        	$stmt = $pdo->prepare($sql);
+                        	try{
+                                	$executed = $stmt->execute();
+                        	} catch (Exception $e){
+                                	print('Error:'.$e->getMessage());
+                                	die();
+                        	}
+			}
+	
+			//データ追加用sql準備
+			$sql = 'INSERT INTO '.$logtable.' (lang, year, cmid, eptid, Count, Start, LastAccess, Score) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+			$stmt = $pdo->prepare($sql);
 			//SQL実行
 /* */
 			try{
@@ -151,29 +191,6 @@ function update_niiMoodleTracking($lang, $year, $logtable, $logdb, $eppnDomain, 
 	}
 
 	//アップデート日時登録用のダミーデータを登録
-	updateDummy($logtable, $lang, $year);
-/*
-	//旧dummyを削除
-	$sql = 'DELETE FROM '.$logtable.' where lang = ? and year = ? and eptid = ?';
-	$stmt = $pdo->prepare($sql);
-
-        try{
-                $executed = $stmt->execute(array($lang, $year, 'dummy'));
-        } catch (Exception $e){
-                print('Import Error:'.$e->getMessage());
-                die();
-        }
-
-	//dummyを登録
-	$sql = 'INSERT INTO '.$logtable.' (lang, year, eptid) VALUES (?, ?, ?)';
-	$stmt = $pdo->prepare($sql);
-
-	try{
-		$executed = $stmt->execute( array($lang, $year, 'dummy') );
-	} catch (Exception $e){
-		print('Import Error:'.$e->getMessage());
-		die();
-	}
-*/
+        updateDummy($logtable, $lang, $year);
 }
 ?>

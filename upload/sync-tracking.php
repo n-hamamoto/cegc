@@ -42,6 +42,7 @@ foreach($lang as $l){
 		$lastupdate = $lastupdate->format('U');
 
 //		$lastupdate = 1660000000;  //2022-08-09 08:06:40		
+//		$lastupdate = 1673917200;  //2023-01-17 10:00:00		
 
 		//syncall=1の時はデータを全部取ってくる
 		if($syncall == 1){ $lastupdate = ''; }; 
