@@ -4,6 +4,9 @@ include_once("../lib/updateDummy.php");
 
 function update_niiMoodleTracking($lang, $year, $logtable, $logdb, $eppnDomain, $lastupdate){
 
+	$dry_run = 0;
+	//$dry_run = 1;
+
 	include("../auth/login.php");
 
  	$cmids  = array();
@@ -77,9 +80,11 @@ function update_niiMoodleTracking($lang, $year, $logtable, $logdb, $eppnDomain, 
 		//テーブルのクリア
 		if($lastupdate == ''){
 			printLog("Clear existing records");
+			if($dry_run == 0){
 			$sql='DELETE FROM '.$logtable.' where lang = ? and year = ? and cmid = ?';
 			$stmt = $pdo->prepare($sql);
 			$executed = $stmt->execute( array( $lang, $year, $cmid) );
+			}
 		}
 	
 		//$sql = 'INSERT INTO '.$logtable.' (lang, year, cmid, eptid, Count, Start, LastAccess, Score) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
@@ -124,67 +129,76 @@ function update_niiMoodleTracking($lang, $year, $logtable, $logdb, $eppnDomain, 
 			//print "$row[2], $row[3], $row[4], $row[5], $row[6], $row[7]\n";
 
 			//Startをdatetimeにする
+			$skip = 0;
 			$patten = '/(\d+)\/(\d+)\/(\d+)\s+(\d+):(\d+):(\d+)/';
 			if(preg_match( $patten, $row[3], $t)){
 				$arg[5] = $t[1]."-".$t[2]."-".$t[3]." ".$t[4].":".$t[5].":".$t[6];
+			}else{
+				$skip = 1;
 			}
 			//LastAccessをdatetimeにする
 			$patten = '/(\d+)\/(\d+)\/(\d+)\s+(\d+):(\d+):(\d+)/';
         		if(preg_match( $patten, $row[4], $t)){
                 		$arg[6] = "$t[1]-$t[2]-$t[3] $t[4]:$t[5]:$t[6]";
-        		}
+			}
 
 	//		var_dump($rowdata);
 			printLog("No. $i: $arg[0], $arg[1], $arg[2], $arg[3], $arg[4], $arg[5], $arg[6] $arg[7]");
-
-			//データを確認
-			$sql = "SELECT count(*) FROM $logtable where 
-				lang = '".$arg[0]."' AND
-				year = $arg[1] AND
-				cmid = $arg[2] AND
-				eptid = '".$arg[3]."' AND
-				Count = $arg[4] AND
-				Start = '".$arg[5]."' AND
-				LastAccess = '".$arg[6]."' AND
-				Score = $arg[7]";
-			$stmt = $pdo->prepare($sql);
-			try{
-                                $executed = $stmt->execute();
-				$count = $stmt->fetchColumn();
-                        } catch (Exception $e){
-                                print('Error:'.$e->getMessage());
-                                die();
-                        }
-			//重複データがあったら消す
-			if($count > 0){
-                        	$sql = "DELETE FROM $logtable where
-                                	lang = '".$arg[0]."' AND
-                                	year = $arg[1] AND
-                                	cmid = $arg[2] AND
-                                	eptid = '".$arg[3]."' AND
-                                	Count = $arg[4] AND
-                                	Start = '".$arg[5]."' AND
-                                	LastAccess = '".$arg[6]."' AND
-                                	Score = $arg[7]";
-                        	$stmt = $pdo->prepare($sql);
-                        	try{
+			if($skip != 0){printLog("skipped");}
+			// 受験を開始していないデータは飛ばす
+			if($skip == 0){
+				//データを確認
+				$sql = "SELECT count(*) FROM $logtable where 
+					lang = '".$arg[0]."' AND
+					year = $arg[1] AND
+					cmid = $arg[2] AND
+					eptid = '".$arg[3]."' AND
+					Count = $arg[4] AND
+					Start = '".$arg[5]."' AND
+					LastAccess = '".$arg[6]."' AND
+					Score = $arg[7]";
+				//print($sql);
+				$stmt = $pdo->prepare($sql);
+				try{
                                 	$executed = $stmt->execute();
+					$count = $stmt->fetchColumn();
                         	} catch (Exception $e){
                                 	print('Error:'.$e->getMessage());
                                 	die();
                         	}
-			}
-	
-			//データ追加用sql準備
-			$sql = 'INSERT INTO '.$logtable.' (lang, year, cmid, eptid, Count, Start, LastAccess, Score) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-			$stmt = $pdo->prepare($sql);
-			//SQL実行
+				//重複データがあったら消す
+				if($count > 0){
+                        		$sql = "DELETE FROM $logtable where
+                                		lang = '".$arg[0]."' AND
+                                		year = $arg[1] AND
+                                		cmid = $arg[2] AND
+                                		eptid = '".$arg[3]."' AND
+                                		Count = $arg[4] AND
+                                		Start = '".$arg[5]."' AND
+                                		LastAccess = '".$arg[6]."' AND
+                                		Score = $arg[7]";
+                        		$stmt = $pdo->prepare($sql);
+                        		try{
+                                		$executed = $stmt->execute();
+                        		} catch (Exception $e){
+                                		print('Error:'.$e->getMessage());
+                                		die();
+                        		}
+				}
+		
+				//データ追加用sql準備
+				$sql = 'INSERT INTO '.$logtable.' (lang, year, cmid, eptid, Count, Start, LastAccess, Score) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+				$stmt = $pdo->prepare($sql);
+				//SQL実行
 /* */
-			try{
-				$executed = $stmt->execute(array($arg[0], $arg[1], $arg[2], $arg[3], $arg[4], $arg[5], $arg[6], $arg[7]));
-			} catch (Exception $e){
-				print('Import Error:'.$e->getMessage());
-				die();
+				if($dry_run == 0){
+					try{
+						$executed = $stmt->execute(array($arg[0], $arg[1], $arg[2], $arg[3], $arg[4], $arg[5], $arg[6], $arg[7]));
+					} catch (Exception $e){
+						print('Import Error:'.$e->getMessage());
+						die();
+					}
+				}
 			}
 /* */
 		}

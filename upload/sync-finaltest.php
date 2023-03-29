@@ -18,6 +18,13 @@ $logtable = 'niiMoodleLog';
 $lang = array('Ja','En','Kr','Cn');
 $year = '2022';
 
+$pdo = pdo_connect_db($logdb);
+$sql = sprintf("select year from defaultAcademicYear");
+$stmt = pdo_query_db($pdo,$sql);
+$data= $stmt->fetch(PDO::FETCH_ASSOC);
+$year = $data['year'];
+$pdo = null;
+
 printLog("sync finaltest start");
 
 //echo date('Y-m-d H:i:s');
@@ -37,10 +44,16 @@ if( isset($_POST['syncall']) ){
 
 // DB接続
 $pdo = pdo_connect_db($logdb);
-$sql = 'SELECT max(updated_at) from niiMoodleLog where lang = ? and year = ? and eptid != ?';
-$stmt = $pdo->prepare($sql);
-
 foreach($lang as $l){
+
+	$sql = 'SELECT count(*) from niiMoodleLog where lang = ? and year = ? and eptid != ?';
+	$stmt = $pdo->prepare($sql);
+	$executed = $stmt->execute( array( $l, $year, 'dummy' ) );
+	$data = $stmt->fetch();
+	$count = $data[0];
+
+	$sql = 'SELECT max(updated_at) from niiMoodleLog where lang = ? and year = ? and eptid != ?';
+	$stmt = $pdo->prepare($sql);
 	//echo $l;
 	$executed = $stmt->execute( array( $l, $year, 'dummy' ) );
 	if($executed){
@@ -50,7 +63,9 @@ foreach($lang as $l){
 		//print $lastupdate;
 
 		//syncall=1の時はデータを全部取ってくる
-		if($syncall == 1){ $lastupdate = ''; }; 
+		if($syncall == 1){ $lastupdate = ''; };
+		//テーブルが空の時はデータを全部取ってくる 
+		if($count == 0){ $lastupdate = ''; };
 
 		//成績取得&登録
 		update_niiMoodleLog($l, $year, $logtable, $logdb, $eppnDomain, $lastupdate); 

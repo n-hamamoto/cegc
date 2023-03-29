@@ -16,7 +16,13 @@ if($_SESSION["isAdmin"] === "1" || $_SESSION["isSubAdmin"] === "1"){}else{
 
 $logtable = 'niiMoodleTracking';
 $lang = array('Ja','En','Kr','Cn');
-$year = '2022';
+//$year = '2022';
+
+$pdo = pdo_connect_db($logdb);
+$sql = sprintf("select year from defaultAcademicYear");
+$stmt = pdo_query_db($pdo,$sql);
+$data= $stmt->fetch(PDO::FETCH_ASSOC);
+$year = $data['year'];
 
 printLog("sync tracking start");
 //echo date('YMD H:i:s');
@@ -31,10 +37,17 @@ if( isset($_POST['syncall']) ){
 
 // DB接続
 $pdo = pdo_connect_db($logdb);
-$sql = 'SELECT max(updated_at) from '.$logtable." where lang = ? and year = ? and eptid != 'dummy'";
-$stmt = $pdo->prepare($sql);
 
 foreach($lang as $l){
+
+        $sql = 'SELECT count(*) from '.$logtable." where lang = ? and year = ? and eptid != ?";
+        $stmt = $pdo->prepare($sql);
+        $executed = $stmt->execute( array( $l, $year, 'dummy' ) );
+        $data = $stmt->fetch();
+        $count = $data[0];
+
+	$sql = 'SELECT max(updated_at) from '.$logtable." where lang = ? and year = ? and eptid != 'dummy'";
+	$stmt = $pdo->prepare($sql);
 	$executed = $stmt->execute( array( $l, $year ) );
 	if($executed){
 		$data = $stmt->fetch();
@@ -46,6 +59,8 @@ foreach($lang as $l){
 
 		//syncall=1の時はデータを全部取ってくる
 		if($syncall == 1){ $lastupdate = ''; }; 
+                //テーブルが空の時はデータを全部取ってくる
+                if($count == 0){ $lastupdate = ''; };
 
 		//成績取得&登録
 		update_niiMoodleTracking($l, $year, $logtable, $logdb, $eppnDomain, $lastupdate); 

@@ -4,6 +4,9 @@ include_once("../lib/updateDummy.php");
 
 function update_niiMoodleLog($lang, $year, $logtable, $logdb, $eppnDomain, $lastupdate){
 
+	//$dry_run = 1;
+	$dry_run = 0;
+
 	include("../auth/login.php");
 
 	if($lastupdate > 0){
@@ -70,10 +73,12 @@ function update_niiMoodleLog($lang, $year, $logtable, $logdb, $eppnDomain, $last
 
 	//テーブルのクリア
 	if($lastupdate == ''){
-		printLog("Clear existing records");
+		printLog("Clear existing records of year $year");
 		$sql='DELETE FROM '.$logtable.' where lang = ? and year = ?';
+		if( $dry_run == 0 ){
 		$stmt = $pdo->prepare($sql);
 		$executed = $stmt->execute( array( $lang, $year) );
+		}
 	}
 
 	//データ追加用sql準備
@@ -148,11 +153,13 @@ function update_niiMoodleLog($lang, $year, $logtable, $logdb, $eppnDomain, $last
 		printLog("$rowdata[0], $rowdata[1], $rowdata[2], $rowdata[3], $rowdata[4], $rowdata[5], $rowdata[6], $rowdata[7]");
 
 		//SQL実行
-		try{
-			$executed = $stmt->execute($rowdata);
-		} catch (Exception $e){
-			print("Import Error:".$e->getMessage());
-			die();
+		if( $dry_run == 0 ){
+			try{
+				$executed = $stmt->execute($rowdata);
+			} catch (Exception $e){
+				print("Import Error:".$e->getMessage());
+				die();
+			}
 		}
 	}
 
