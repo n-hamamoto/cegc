@@ -13,7 +13,7 @@ include("../../lib/id.php");
 include("../../lib/function.php");
 include("../lib/printLogs.php");
 
-function print_score($pdo,$lang,$year,$eptid,$userid){
+function print_score($pdo,$lang,$eptid,$userid,$years){
 	include("../../conf/config.php");
 
 	//変数初期化
@@ -21,7 +21,8 @@ function print_score($pdo,$lang,$year,$eptid,$userid){
 
 	//現りんりん姫の検索
 	$oldflg = 0;
-	$res = getNiiMoodleLog($oldflg,$lang,$eptid,$userid);
+        foreach($years as $year){
+	$res = getNiiMoodleLog($oldflg,$lang,$eptid,$userid,$year);
 
 	foreach($res as $data){
     		if($data['FinalTest']>=$passingScore and $printPassingStatus == 1){
@@ -31,10 +32,11 @@ function print_score($pdo,$lang,$year,$eptid,$userid){
     		}
     		$examdate=$examdate.htmlspecialchars($data['End'])."<br>";
   	}
-
+	}
+	
 	//旧りんりん姫の検索
 	$oldflg = 1;
-	$res = getNiiMoodleLog($oldflg,$lang,$eptid,$userid);
+	$res = getNiiMoodleLog($oldflg,$lang,$eptid,$userid,'dummy');
 
 	foreach($res as $data){
     		if($data['FinalTest']>=80){
@@ -58,6 +60,17 @@ function print_score($pdo,$lang,$year,$eptid,$userid){
 */
 
 $langs = array('Ja','En','Cn','Kr');
+
+/* courseInfo内に登録されているyearを取得 */
+$pdo = pdo_connect_db($logdb);
+$sql = sprintf("select distinct year from courseInfo order by year desc;");
+$stmt = $pdo->prepare($sql);
+$stmt->execute();
+$years=array();
+while($data= $stmt->fetch(PDO::FETCH_ASSOC)){
+        array_push($years, $data['year']);
+};
+$pdo = null;
 
 if( isset($_POST['printFailedOnly']) ){
 	$printFailedOnly = $_POST['printFailedOnly'];
@@ -119,9 +132,9 @@ for($i=0;$i<$imax;$i++){
   if($printPassingStatus == 1){
 	foreach($langs as $lang){
   		//合否判定
-  		[$out[$lang], $complete_ratio[$lang]] = coursePassed($lang, $eptid, $id[$i]);
+  		[$out[$lang], $info[$lang], $complete_ratio[$lang]] = coursePassed($lang, $eptid, $id[$i], $years);
 		if($out[$lang] > 0){$outall = 1;}
-  	}
+	}
   }
 
   $print = 0;
@@ -141,20 +154,31 @@ for($i=0;$i<$imax;$i++){
   	foreach($langs as $lang){
   		print"<td>";
   		if($out[$lang] == 1){
-		print "合格(新)";
+		print "合格: ";
+		//print "合格(新)";
   		}else if($out[$lang] == 2){
-		print "合格(旧)";
+		print "合格: ";
+		//print "合格(旧)";
   		}else if($out[$lang] == 3){
-		print "合格(新・旧)";
+		print "合格: ";
+		//print "合格(新・旧)";
   		}else{
 		print "不合格";
   		};
+		print "$info[$lang]";
 		if($out[$lang] != 2){
-		print "<br>(受講".$complete_ratio[$lang]."%)";
+			foreach($years as $year){
+			if($complete_ratio[$lang][$year] != 0){
+			print "<br>(".$year.":".$complete_ratio[$lang][$year]."%)";
+			}
+			}
 		}
 		print"</td>";
 
-  		print_score($pdo,$lang,$year,$eptid,$id[$i]);
+        	//foreach($years as $year){
+  		//print_score($pdo,$lang,$year,$eptid,$id[$i]);
+  		print_score($pdo,$lang,$eptid,$id[$i],$years);
+		//}
   	}
   	print "</tr>";
      }

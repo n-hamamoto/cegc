@@ -7,6 +7,14 @@ function update_courseInfo(){
 	include("../conf/config.php");
 	include("../auth/login.php");
 
+	// 設定されている年度をDBから取得
+	$pdo = pdo_connect_db($logdb);
+	$sql = sprintf("select year from defaultAcademicYear");
+	$stmt = pdo_query_db($pdo,$sql);
+	$data= $stmt->fetch(PDO::FETCH_ASSOC);
+	$year = $data['year'];
+	$pdo = null;
+
         // APIでCourseIDを取得
         $html = callReportAPI(0, '', '', '');
         $obj = json_decode($html);
@@ -18,10 +26,12 @@ function update_courseInfo(){
 
 	// DB接続してcourseInfoの全レコードを削除
 	$pdo = pdo_connect_db($logdb);
-	$sql = 'DELETE FROM courseInfo';
+	$sql = 'DELETE FROM courseInfo where year = ?';
 	$stmt = $pdo->prepare($sql);
 	try{
-		$executed = $stmt->execute();
+		$executed = $stmt->execute(
+			array( $year )
+		);
 	} catch (Exception $e){
      		print('Import Error:'.$e->getMessage());
          	print $br;
@@ -31,7 +41,7 @@ function update_courseInfo(){
 
         // DB接続
         $pdo = pdo_connect_db($logdb);
-        $sql = 'INSERT INTO courseInfo (coursemoduleid, courseid, coursefullname, courseshortname, modinstanceid, visibility, modname, modnamelocal, modinstancename) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        $sql = 'INSERT INTO courseInfo (coursemoduleid, courseid, coursefullname, courseshortname, modinstanceid, visibility, modname, modnamelocal, modinstancename, year) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
         $stmt = $pdo->prepare($sql);
 
         foreach($obj as $o){
@@ -41,7 +51,8 @@ function update_courseInfo(){
                 print $o->coursemoduleid.", ";
                 print $o->courseshortname.", ";
                 print $o->coursefullname.", ";
-                print $o->visibility.$br;
+                print $o->visibility.",";
+                print $year.$br;
 
                 //SQL実行
                 try{
@@ -55,7 +66,8 @@ function update_courseInfo(){
 						$o->visibility, 
 						$o->modname, 
 						$o->modnamelocal, 
-						$o->modinstancename
+						$o->modinstancename,
+						$year
 					 ));
            	} catch (Exception $e){
                  	print('Import Error:'.$e->getMessage());
