@@ -32,7 +32,7 @@ function update_niiMoodleTracking($lang, $year, $logtable, $logdb, $eppnDomain, 
 	if($lang == 'Cn'){
 		$shortname = 'rinrin_security-cn';
 	}
-        $sql = "SELECT * from courseInfo where modname = 'scorm' and courseshortname = '".$shortname."' and visibility = 1";
+        $sql = "SELECT * from courseInfo where modname = 'scorm' and courseshortname = '".$shortname."' and visibility = 1 and year = ".$year;
         //print $sql."\n";
         $stmt = $pdo->prepare($sql);
 	try {
