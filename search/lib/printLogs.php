@@ -55,16 +55,18 @@ function printNiiMoodleLog($oldflg, $pdo, $lang, $title, $eptid, $userid, $year)
 
 	foreach($res as $value){
      		print "<div>";
-     		print "<div class='score'>";
-     		if($value["FinalTest"] >= $passingScore and $printPassingStatus == 1){print "<strong>";}
-     		print $value["FinalTest"]."点";
-     		if($value["FinalTest"] >= $passingScore and $printPassingStatus == 1){print "</strong>";}
-     		print "</div>";
-     		print "<div class='date'>";
-		if( is_numeric($value['ElapsedTime']) ){
-			print "受験終了日時 ".$value["End"]."(".$value['ElapsedTime']."秒)";
-     		}else{
-			print "受験終了日時 ".$value["End"]."(".$value['ElapsedTime'].")";
+		if(!is_null($value['ElapsedTime'])){
+     			print "<div class='score'>";
+     			if($value["FinalTest"] >= $passingScore and $printPassingStatus == 1){print "<strong>";}
+     			print $value["FinalTest"]."点";
+     			if($value["FinalTest"] >= $passingScore and $printPassingStatus == 1){print "</strong>";}
+     			print "</div>";
+     			print "<div class='date'>";
+			if( is_numeric($value['ElapsedTime']) ){
+				print "受験終了日時 ".$value["End"]."(".$value['ElapsedTime']."秒)";
+     			}else{
+				print "受験終了日時 ".$value["End"]."(".$value['ElapsedTime'].")";
+			}
 		}
      		print "</div>";
      		print "</div>";
@@ -256,22 +258,26 @@ function coursePassed($lang, $eptid, $userid, $years){
 				and visibility = '1' 
 				and cmid = coursemoduleid 
 				and niiMoodleTracking.year = ?
+				and courseInfo.year = ?
 			group by eptid, cmid
 			)T
 			");
 
-			$stmt->execute( array( $eptid, $userid, $lang, $year ) );
+			$stmt->execute( array( $eptid, $userid, $lang, $year, $year ) );
 
   			$complete_ratio_output = "";
   			while($result = $stmt->fetch(PDO::FETCH_ASSOC)){
+				//print "<pre>$year $lang ".$result['sum(T.maxscore)']."</pre>";
      				$complete_ratio[$year] = $result['sum(T.maxscore)']/$nCourse;
+     				$complete_ratio[$year] = round($complete_ratio[$year], 1);
+				
      				if($complete_ratio[$year] == 100){
         				$complete_ratio_output = "<strong>".htmlspecialchars($complete_ratio[$year])."</strong>";
         				$passTracking = 1;
     				}else{
         				$complete_ratio_output = $complete_ratio[$year];
      				}
-				//print($complete_ratio);
+				//print($complete_ratio[$year]);
 			}
   		}
 	}
@@ -321,6 +327,7 @@ function coursePassed($lang, $eptid, $userid, $years){
 	// 1 passed by new
 	// 0 failed
 	// print $passed;
+	// print"<pre>".var_dump($complete_ratio)."</pre>";
 	return array($passed, $passed_info, $complete_ratio);
 
 /*
