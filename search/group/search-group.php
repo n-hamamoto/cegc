@@ -133,7 +133,7 @@ for($i=0;$i<$imax;$i++){
 	foreach($langs as $lang){
   		//合否判定
   		[$out[$lang], $info[$lang], $complete_ratio[$lang]] = coursePassed($lang, $eptid, $id[$i], $years);
-		if($out[$lang] > 0){$outall = 1;}
+		if($out[$lang] > 0 && strcmp($info[$lang], "旧 ") != 0 ){$outall = 1;}
 	}
   }
 
