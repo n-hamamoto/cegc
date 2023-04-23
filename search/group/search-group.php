@@ -142,6 +142,8 @@ for($i=0;$i<$imax;$i++){
   if($printFailedOnly != 1){$print = 1;}
 
   if($print == 1){
+	//@ob_flush();
+	//@flush();
 	if($outall ==1){
   		print "<tr class='passed'>";
 	}else{

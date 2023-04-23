@@ -30,7 +30,7 @@ $(function(){
 			url: $form.attr('action'),
 			    type: $form.attr('method'),
 			    data: $form.serialize() + '&delay=1',
-			    timeout: 10000,
+			    timeout: 30000,
 			    beforeSend: function(xhr, settings){
 			    $button.attr('disabled',true);
 			},
@@ -41,7 +41,9 @@ $(function(){
 			    //			    $form[0].reset();
 			    $('#resultField').html(result);
 			},
-			    error: function(xhr, textStatus, error){}
+			    error: function(xhr, textStatus, error){
+				$('#resultField').html('timeout');
+				}
 		    });
 	    });
 
