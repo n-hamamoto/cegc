@@ -11,9 +11,8 @@ if($_SESSION["isAdmin"] === "1" || $_SESSION["isSubAdmin"] === "1"){}else{
 ?>
 <html>
 <head>
-<script type="text/javascript" src="../../jquery.min.js"></script>
-<script type="text/javascript" src="./select-user.js"></script>
 <?php include("../lib/header.php");?>
+<script type="text/javascript" src="./select-user.js"></script>
 <title>Upload Data</title>
 </head>
 <body>

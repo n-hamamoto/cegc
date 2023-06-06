@@ -2,6 +2,7 @@
 <head>
 <?php include("./conf/config.php") ?>
 <?php include("./lib/header.php") ?>
+<title>エラー</title>
 </head>
 <body>
 <div id="main">

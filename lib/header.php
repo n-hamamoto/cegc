@@ -7,4 +7,3 @@
 <link rel="stylesheet" href="https://<?php echo $documentRoot ?>/css/common.css">
 <link rel="stylesheet" href="https://<?php echo $documentRoot ?>/css/font.css">
 <link rel="stylesheet" href="https://<?php echo $documentRoot ?>/css/content.css">
-<title>情報倫理eラーニング成績確認システム</title>

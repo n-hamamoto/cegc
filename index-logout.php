@@ -2,6 +2,7 @@
 <head>
 <?php include("./conf/config.php") ?>
 <?php include("./lib/header.php") ?>
+<title>ログアウト</title>
 </head>
 <body>
 <div id="login">

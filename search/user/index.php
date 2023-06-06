@@ -11,9 +11,10 @@ if($_SESSION["isAdmin"] === "1" || $_SESSION["isSubAdmin"] === "1"){}else{
 <html>
 <head>
 <title>ユーザ検索</title>
-<script type="text/javascript" src="../../jquery.min.js"></script>
-<script type="text/javascript" src="./select-user.js"></script>
+
 <?php include("../../lib/header.php");?>
+
+<script type="text/javascript" src="./select-user.js"></script>
 </head>
 <body>
 <?php

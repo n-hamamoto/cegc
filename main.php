@@ -8,6 +8,7 @@ include("./auth/login.php");
 <?php
 include("./lib/header.php");
 ?>
+<title>情報倫理eラーニング成績確認システム</title>
 </head>
 <body>
 <?php
