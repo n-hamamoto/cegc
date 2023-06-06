@@ -2,7 +2,7 @@
 include_once("../lib/printLog.php");
 include_once("../lib/updateDummy.php");
 
-function update_niiMoodleTracking($lang, $year, $logtable, $logdb, $eppnDomain, $lastupdate){
+function update_niiMoodleTracking($lang, $year, $logtable, $logdb, $eppnDomain, $syncall){
 
 	$dry_run = 0;
 	//$dry_run = 1;
@@ -11,11 +11,6 @@ function update_niiMoodleTracking($lang, $year, $logtable, $logdb, $eppnDomain, 
 
  	$cmids  = array();
         $mnames = array();
-
-	if($lastupdate > 0){
-		$log = "Recieving the $lang data after ".date('Y-m-d H:i:s',$lastupdate)." from GakuNinLMS.";
-		printLog($log);
-	}
 
         // DB接続
         $pdo = pdo_connect_db($logdb);
@@ -49,13 +44,43 @@ function update_niiMoodleTracking($lang, $year, $logtable, $logdb, $eppnDomain, 
 
 	//courseidの分だけループ
         for($ii=0; $ii<count($cmids); $ii++){
-                printLog("----------------------------------------");
-                printLog("$cmids[$ii] $mnames[$ii]");
+                //printLog("----------------------------------------");
+                //printLog("$cmids[$ii] $mnames[$ii]");
                 //printLog("----------------------------------------");
 		//タイムアウト対策で，とにかく出力（出力バッファの内容を送信）
 		@ob_flush(); @flush();
-		
+
 		$cmid = $cmids[$ii];
+
+		if($syncall == 0){	
+			// cmid毎に最終更新日時を取得	
+			$sql="SELECT max(updated_at) from niiMoodleTracking where lang = ? and year = ? and eptid != 'dummy' and cmid = ?";
+			$stmt = $pdo->prepare($sql);
+			$executed = $stmt->execute( array( $lang, $year, $cmid) );
+        		if($executed){
+                		$data = $stmt->fetch();
+                		$lastupdate = new Datetime($data[0]);
+                		$lastupdate = $lastupdate->format('U');
+				if($lastupdate > 0 ){
+                			$lastupdate = $lastupdate - 300;//最終更新の5分前のデータを基準にして取得する。
+				}else{
+					$lastupdate = ''; //データがなかったら全データ取得
+				}
+			}
+		}else{
+			$lastupdate = '';//syncall == 1なら全データ取得
+		}
+                printLog("----------------------------------------");
+		if($lastupdate>0){
+			$log = "Recieving the $lang record after ".date('Y-m-d H:i:s',$lastupdate)." from GakuNinLMS.";
+		}else{
+			$log = "Recieving the all $lang record from GakuNinLMS.";
+		}
+		
+                printLog("$log $cmids[$ii] $mnames[$ii]");
+
+                //タイムアウト対策で，とにかく出力（出力バッファの内容を送信）
+                @ob_flush(); @flush();
 
 		// APIでGLMSからTrackingの結果を取得
 		$html = callReportAPI(1, $cmid, $lastupdate,'');
@@ -71,6 +96,7 @@ function update_niiMoodleTracking($lang, $year, $logtable, $logdb, $eppnDomain, 
 			printLog("$lang : error -- response dump");
 			var_dump($arr);
 			print $br;
+			die();
 		}
 
 		//print "$logtable $logdb";

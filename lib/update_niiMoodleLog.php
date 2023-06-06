@@ -2,16 +2,38 @@
 include_once("../lib/printLog.php");
 include_once("../lib/updateDummy.php");
 
-function update_niiMoodleLog($lang, $year, $logtable, $logdb, $eppnDomain, $lastupdate){
+function update_niiMoodleLog($lang, $year, $logtable, $logdb, $eppnDomain, $syncall){
 
 	//$dry_run = 1;
 	$dry_run = 0;
 
 	include("../auth/login.php");
 
-	if($lastupdate > 0){
-		$log = "Recieving the $lang data after ".date('Y-m-d H:i:s',$lastupdate)." from GakuNinLMS.";
-		printLog($log);
+	if($syncall == 1){
+                //syncall=1の時はデータを全部取ってくる
+                $lastupdate = '';
+	}elseif($syncall == 0){
+        	// DB接続
+        	$pdo = pdo_connect_db($logdb);
+        	$sql = 'SELECT max(updated_at) from niiMoodleLog where lang = ? and year = ? and eptid != ?';
+        	$stmt = $pdo->prepare($sql);
+        	//echo $l;
+        	$executed = $stmt->execute( array( $l, $year, 'dummy' ) );
+        	if($executed){
+                	$data = $stmt->fetch();
+                	$lastupdate = new Datetime($data[0]);
+                	$lastupdate = $lastupdate->format('U');
+			if($lastupdate > 0){
+                		$lastupdate = $lastupdate - 300;//最終更新から5分前のデータを取得対象とする（重複データ削除して再登録）
+			}else{
+				$lastupdate = '';//データが無かったら全データ取得
+			}
+                	//print $lastupdate;
+
+		}
+		$pdo = null;
+	}else{
+		die();
 	}
 
         $cmids  = array();
@@ -49,6 +71,14 @@ function update_niiMoodleLog($lang, $year, $logtable, $logdb, $eppnDomain, $last
         }
 	$cmid  = $cmids[0];
 	$mname = $mnames[0];
+
+	if($lastupdate > 0){
+    		$log = "Recieving the $lang records after ".date('Y-m-d H:i:s',$lastupdate)." from GakuNinLMS.";
+	}else{
+    		$log = "Recieving all the $lang record after from GakuNinLMS.";
+	}		
+     	printLog($log);
+        @ob_flush(); @flush();//とにかく出力
 
 	// APIでGLMSからfinalTestの結果を取得
 	$html = callReportAPI(1, $cmid, $lastupdate, '');

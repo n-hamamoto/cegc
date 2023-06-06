@@ -24,6 +24,7 @@ function callReportAPI($func, $cmid, $from, $to){
         	$data['to'] = $to;
 	};
 
+	//var_dump($data);
 	// apiエンドポイント
 	$url = 'https://lms.nii.ac.jp/blocks/niigradesapi/api.php';
 	//$url = 'https://www.media.gunma-u.ac.jp';
@@ -51,8 +52,8 @@ function callReportAPI($func, $cmid, $from, $to){
         	}
         	echo nl2br($CURLERR);
 		curl_close($ch);
+	      	//die();
 		return 1;
-	//      exit();
 	}
 
 	//接続エラーの無いとき

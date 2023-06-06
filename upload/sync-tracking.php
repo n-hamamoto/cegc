@@ -25,8 +25,6 @@ $data= $stmt->fetch(PDO::FETCH_ASSOC);
 $year = $data['year'];
 
 printLog("sync tracking start");
-//echo date('YMD H:i:s');
-//print " sync tracking start";
 
 if( isset($_POST['syncall']) ){
         $syncall = $_POST['syncall'];
@@ -35,36 +33,10 @@ if( isset($_POST['syncall']) ){
 }
 //$syncall = $_POST['syncall'];
 
-// DB接続
-$pdo = pdo_connect_db($logdb);
-
 foreach($lang as $l){
 
-        $sql = 'SELECT count(*) from '.$logtable." where lang = ? and year = ? and eptid != ?";
-        $stmt = $pdo->prepare($sql);
-        $executed = $stmt->execute( array( $l, $year, 'dummy' ) );
-        $data = $stmt->fetch();
-        $count = $data[0];
-
-	$sql = 'SELECT max(updated_at) from '.$logtable." where lang = ? and year = ? and eptid != 'dummy'";
-	$stmt = $pdo->prepare($sql);
-	$executed = $stmt->execute( array( $l, $year ) );
-	if($executed){
-		$data = $stmt->fetch();
-		$lastupdate = new Datetime($data[0]);
-		$lastupdate = $lastupdate->format('U');
-
-//		$lastupdate = 1660000000;  //2022-08-09 08:06:40		
-//		$lastupdate = 1673917200;  //2023-01-17 10:00:00		
-
-		//syncall=1の時はデータを全部取ってくる
-		if($syncall == 1){ $lastupdate = ''; }; 
-                //テーブルが空の時はデータを全部取ってくる
-                if($count == 0){ $lastupdate = ''; };
-
-		//成績取得&登録
-		update_niiMoodleTracking($l, $year, $logtable, $logdb, $eppnDomain, $lastupdate); 
-	}
+	//成績取得&登録
+	update_niiMoodleTracking($l, $year, $logtable, $logdb, $eppnDomain, $syncall); 
 }
 
 if($_SESSION["auth"] === "true"){

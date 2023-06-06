@@ -270,6 +270,8 @@ function coursePassed($lang, $eptid, $userid, $years){
 				//print "<pre>$year $lang ".$result['sum(T.maxscore)']."</pre>";
      				$complete_ratio[$year] = $result['sum(T.maxscore)']/$nCourse;
      				$complete_ratio[$year] = round($complete_ratio[$year], 1);
+				// 取扱注意!IDとパスワードの満点が4点になってしまったので，暫定対策。
+     				if($result['sum(T.maxscore)'] == 804){$complete_ratio[$year]=100;};
 				
      				if($complete_ratio[$year] == 100){
         				$complete_ratio_output = "<strong>".htmlspecialchars($complete_ratio[$year])."</strong>";
