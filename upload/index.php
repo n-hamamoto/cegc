@@ -12,7 +12,6 @@ if($_SESSION["isAdmin"] === "1" || $_SESSION["isSubAdmin"] === "1"){}else{
 <html>
 <head>
 <?php include("../lib/header.php");?>
-<script type="text/javascript" src="./select-user.js"></script>
 <title>Upload Data</title>
 </head>
 <body>
@@ -27,6 +26,8 @@ include("../lib/displayUpdate.php");
 <form action="./upload/sync-finaltest.php" method="post" enctype="multipart/form-data">
   <input type="radio" name="syncall" value="0" checked/>更新データのみを取得<br>
   <input type="radio" name="syncall" value="1"/>現在のデータを削除して全データを取得<br>
+  <input type="radio" name="syncall" value="2"/>指定日以降のデータを取得
+  <input type="text" name="syncdate" minlength="8" maxlength="8" size="10" placeholder="YYYYMMDD"><br>
 <input type="submit" value="登録" />
 </form>
 </div>
@@ -36,7 +37,8 @@ include("../lib/displayUpdate.php");
 <form action="./upload/sync-tracking.php" method="post" enctype="multipart/form-data">
   <input type="radio" name="syncall" value="0" checked/>更新データのみを取得<br>
   <input type="radio" name="syncall" value="1"/>現在のデータを削除して全データを取得<br>
-
+  <input type="radio" name="syncall" value="2"/>指定日以降のデータを取得
+  <input type="text" name="syncdate" minlength="8" maxlength="8" size="10" placeholder="YYYYMMDD"><br>
   <input type="submit" value="登録" />
 </form>
 </div>

@@ -2,7 +2,7 @@
 include_once("../lib/printLog.php");
 include_once("../lib/updateDummy.php");
 
-function update_niiMoodleTracking($lang, $year, $logtable, $logdb, $eppnDomain, $syncall){
+function update_niiMoodleTracking($lang, $year, $logtable, $logdb, $eppnDomain, $syncall, $syncdate){
 
 	$dry_run = 0;
 	//$dry_run = 1;
@@ -67,9 +67,15 @@ function update_niiMoodleTracking($lang, $year, $logtable, $logdb, $eppnDomain, 
 					$lastupdate = ''; //データがなかったら全データ取得
 				}
 			}
-		}else{
+		}elseif($syncall == 1){
 			$lastupdate = '';//syncall == 1なら全データ取得
+		}elseif($syncall == 2){
+                	$lastupdate = new Datetime($syncdate);
+                	$lastupdate = $lastupdate->format('U');
+		}else{
+			die();
 		}
+
                 printLog("----------------------------------------");
 		if($lastupdate>0){
 			$log = "Recieving the $lang record after ".date('Y-m-d H:i:s',$lastupdate)." from GakuNinLMS.";

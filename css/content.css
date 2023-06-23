@@ -218,14 +218,23 @@ input[type="submit"], input[type="button"] {
 /* input要素のうちtype属性値がbuttonのものに対して装飾 */
 	padding: 5px 10px;
 	margin:  5px 0px;
-	border: 1px solid #000066;
-	border-radius: 0.3em;      
+	//border: 1px solid #000066;
+	//border-radius: 0.3em;      
+	height: 30px;
 }
 
 input[type="text"] {
-        padding: 5px 5px;
-        margin:  5px 0px;
+        padding: 0px 5px;
+        margin:  0px 0px;
 	width: 200px;
+	height: 30px;
+}
+.csvSubmitForm input[type="text"]{
+	width: auto;
+}
+.csvSubmitForm input[type="radio"]{
+	height: 30px;
+	vertical-align: middle;
 }
 
 textarea {
@@ -239,6 +248,7 @@ textarea {
 select {
 	padding: 5px 10px;
 	margin: 5px 0px;
+	height: 30px;
 }
 
 tr.passed {

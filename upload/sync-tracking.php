@@ -29,14 +29,24 @@ printLog("sync tracking start");
 if( isset($_POST['syncall']) ){
         $syncall = $_POST['syncall'];
 }else{
-        $syncall = 0; // 1: データを全て取り直す, 0: 差分をとってくる
+        $syncall = 0; // 1: データを全て取り直す, 0: 差分をとってくる, 2:指定日以降のデータを取る
 }
 //$syncall = $_POST['syncall'];
+
+if( $syncall ==2 && isset($_POST['syncdate']) ){
+        $syncdate = $_POST['syncdate'];
+        if(preg_match('/^[0-9]{8}$/', $syncdate)){
+        }else{
+                die("Input date is not YYYYMMDD format");
+        }
+}else{
+        $syncdate = 0;
+}
 
 foreach($lang as $l){
 
 	//成績取得&登録
-	update_niiMoodleTracking($l, $year, $logtable, $logdb, $eppnDomain, $syncall); 
+	update_niiMoodleTracking($l, $year, $logtable, $logdb, $eppnDomain, $syncall, $syncdate); 
 }
 
 if($_SESSION["auth"] === "true"){

@@ -2,7 +2,7 @@
 include_once("../lib/printLog.php");
 include_once("../lib/updateDummy.php");
 
-function update_niiMoodleLog($lang, $year, $logtable, $logdb, $eppnDomain, $syncall){
+function update_niiMoodleLog($lang, $year, $logtable, $logdb, $eppnDomain, $syncall, $syncdate){
 
 	//$dry_run = 1;
 	$dry_run = 0;
@@ -18,7 +18,7 @@ function update_niiMoodleLog($lang, $year, $logtable, $logdb, $eppnDomain, $sync
         	$sql = 'SELECT max(updated_at) from niiMoodleLog where lang = ? and year = ? and eptid != ?';
         	$stmt = $pdo->prepare($sql);
         	//echo $l;
-        	$executed = $stmt->execute( array( $l, $year, 'dummy' ) );
+        	$executed = $stmt->execute( array( $lang, $year, 'dummy' ) );
         	if($executed){
                 	$data = $stmt->fetch();
                 	$lastupdate = new Datetime($data[0]);
@@ -32,6 +32,9 @@ function update_niiMoodleLog($lang, $year, $logtable, $logdb, $eppnDomain, $sync
 
 		}
 		$pdo = null;
+	}elseif($syncall == 2){
+		$lastupdate = new Datetime($syncdate);
+                $lastupdate = $lastupdate->format('U');
 	}else{
 		die();
 	}
