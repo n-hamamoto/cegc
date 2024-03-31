@@ -11,4 +11,20 @@ else{
 	header("Location: https://".$documentRoot."logout.php");
   }
 }
+
+function requireSubAdmin(){
+
+	if($_SESSION["isAdmin"] === 1 || $_SESSION["isSubAdmin"] === 1){
+		echo "test";
+	}else{
+ 		header("Location: https://".$documentRoot."logout.php");
+	}
+}
+
+function requireGroupAdmin(){
+	if($_SESSION["isAdmin"] === 1 || $_SESSION["isGroupAdmin"] === 1){
+	}else{
+ 		header("Location: https://".$documentRoot."logout.php");
+	}
+}
 ?>

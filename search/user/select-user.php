@@ -6,9 +6,8 @@ include("../../lib/dblib.php");
 include("../../lib/id.php");
 include("../lib/printLogs.php");
 //権限のない人はログアウト
-if($_SESSION["isAdmin"] === "1" || $_SESSION["isSubAdmin"] === "1"){}else{
- header("Location: https://".$documentRoot."logout.php");
-}
+requireSubAdmin();
+
 $userid = $_POST['name'];
 ?>
 <script type="text/javascript" src="https://<?php echo $documentRoot ?>/js/resultField.js"></script>

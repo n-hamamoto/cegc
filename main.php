@@ -29,7 +29,7 @@ include("./lib/displayUpdate.php");
 </div>
 <div id = "resultField">
 <?php 
-#print_r($_SESSION)
+print_r($_SESSION)
 ?>
 </div>
 </body>

@@ -18,7 +18,10 @@ function print_lastupdate($pdo, $tbl, $lang){
  print "</div>";
  print "<div class='updateTime'>";
 // print_r($data);
+if(!is_null($data['max(created_at)']))
+{
  xss_char_echo(substr($data['max(created_at)'],0,-3));
+}
 // xss_char_echo(substr($data['created_at'],0,-3));
  print "</div>";
 }

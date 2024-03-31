@@ -4,9 +4,7 @@ include_once("../conf/config.php");
 include("../auth/login.php");
 
 //権限のない人はログアウト
-if($_SESSION["isAdmin"] === "1" || $_SESSION["isSubAdmin"] === "1"){}else{
- header("Location: https://".$documentRoot."logout.php");
-}
+requireSubAdmin();
 
 ?>
 <html>
