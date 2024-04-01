@@ -14,7 +14,7 @@ $pdo = pdo_connect_db($logdb);
 
 if($_POST["year"]>0){
 	//年度を選んだ時
-	if( $_SESSION['isAdmin']==='1' ){
+	if( isAdmin() ){
     		$sql = "SELECT 	groupInfo.groupName, groupInfo.year, groupInfo.groupId
 			FROM   	groupInfo
 			WHERE  	groupInfo.year = ?";
@@ -31,7 +31,7 @@ if($_POST["year"]>0){
 	}
 }else{
 	//年度で「全」を選んだ時
-	if( $_SESSION['isAdmin']==='1' ){
+	if( isAdmin() ){
                 $sql = "SELECT  groupInfo.groupName, groupInfo.year, groupInfo.groupId
                         FROM    groupInfo";
 		$stmt = $pdo->prepare($sql);

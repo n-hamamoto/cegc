@@ -7,9 +7,7 @@ require_once("../lib/callReportAPI.php");
 require_once("../lib/update_courseInfo.php");
 
 //権限のない人はログアウト
-if($_SESSION["isAdmin"] === "1" || $_SESSION["isSubAdmin"] === "1"){}else{
- header("Location: https://".$documentRoot."logout.php");
-}
+requireSubAdmin();
 ?>
 <?
 update_courseInfo();

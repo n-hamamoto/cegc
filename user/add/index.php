@@ -25,10 +25,10 @@ requireGroupAdmin();
 <input type="checkbox" name="isTeacher" id="isTeacher" value="1">
 担当グループ成績閲覧権限（授業担当教員）
 </label>
--->
 <br>
+-->
 <?php
-if($_SESSION['isAdmin'] == 1){
+if( isAdmin() ){
 print '
 <label for="isSubAdmin">
 <input type="checkbox" name="isSubAdmin" id="isSubAdmin" value="1">

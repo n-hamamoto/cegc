@@ -8,9 +8,7 @@ require_once("../lib/update_niiMoodleTracking.php");
 require_once("../lib/printLog.php");
 
 //権限のない人はログアウト
-if($_SESSION["isAdmin"] === "1" || $_SESSION["isSubAdmin"] === "1"){}else{
- header("Location: https://".$documentRoot."logout.php");
-}
+requireSubAdmin();
 ?>
 <?php
 

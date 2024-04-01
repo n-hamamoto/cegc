@@ -5,9 +5,7 @@ include_once("../../conf/config.php");
 include_once("../../lib/dblib.php");
 include_once("../../lib/function.php");
 //権限のない人はログアウト
-if($_SESSION["isAdmin"] === "1" || $_SESSION["isGroupAdmin"] === "1"){}else{
- header("Location: https://".$documentRoot."logout.php");
-}
+requireGroupAdmin();
 
 $groupId = chk_input($_POST["name"],'グループ名');
 $memberList = chk_input($_POST["memberList"],'メンバー');

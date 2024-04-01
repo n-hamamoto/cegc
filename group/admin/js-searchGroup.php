@@ -14,6 +14,7 @@ $pdo = pdo_connect_db($logdb);
 $stmt = $pdo->prepare("select groupId from groupAdmin where userId = ? order by groupId");
 $stmt->execute( array( $userId ) );
 
+$adminGids = array();
 while($data = $stmt->fetch(PDO::FETCH_ASSOC)){
   $adminGids[] = $data['groupId'];//配列に要素を追加(pushと同等)
 }
@@ -34,7 +35,7 @@ foreach($years as $y){
 
   	$checked = "";
         foreach($adminGids as $gid){
-    		if($data['groupId'] === $gid){
+    		if($data['groupId'] == $gid){//data['groupId']はstring, gidはinteger
       			$checked = "checked";
     		}
   	}

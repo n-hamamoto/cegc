@@ -20,8 +20,8 @@ $imax = $i;
 
 $pdo = null;
 
-print_r($gid);
-print_r($gidall);
+//print_r($gid);
+//print_r($gidall);
 
 print '<textarea name="memberList">';
 //inputの表示

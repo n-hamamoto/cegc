@@ -61,6 +61,10 @@ function print_score($pdo,$lang,$eptid,$userid,$years){
 
 $langs = array('Ja','En','Cn','Kr');
 
+/* 入力確認 */
+if( empty($_POST['year']) ){ print 'Please select the year';   die; }
+if( $_POST['groupId'] < 0 ){ print 'Please select the course'; die; }
+
 /* courseInfo内に登録されているyearを取得 */
 $pdo = pdo_connect_db($logdb);
 $sql = sprintf("select distinct year from courseInfo order by year desc;");

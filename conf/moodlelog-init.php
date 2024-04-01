@@ -88,7 +88,8 @@ $sql="create table courseInfo (
 	visibility int,
 	modname varchar(255),
 	modnamelocal varchar(255),
-	modinstancename varchar(255)
+	modinstancename varchar(255),
+	year int
 )";
 $stmt = pdo_query_db($pdo,$sql);
 

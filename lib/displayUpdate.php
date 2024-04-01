@@ -1,4 +1,3 @@
-
 <?php
 include_once("function.php");
 include_once("dblib.php");
@@ -26,7 +25,7 @@ if(!is_null($data['max(created_at)']))
  print "</div>";
 }
 
-if($_SESSION["isAdmin"]=='1' || $_SESSION["isSubAdmin"]=='1'){
+if( isAdmin() || isSubAdmin() ){
  print "<div class='updateNotice tracking'>";
  print "<div>最終更新（受講履歴）</div>";
  print_lastupdate($pdo,'niiMoodleTracking','Ja');
@@ -39,7 +38,7 @@ if($_SESSION["isAdmin"]=='1' || $_SESSION["isSubAdmin"]=='1'){
 
 <?php
 print "<div class='updateNotice finalTest'>";
-if($_SESSION["isAdmin"]=='true'){
+if( isAdmin() ){
  print "<div>最終更新（総合テスト）</div>";
 }else{
  print "<div>最終更新</div>";

@@ -4,7 +4,7 @@
   //
 print "クリックするとグループのメンバーを表示します。";
 $pdo = pdo_connect_db($logdb);
-if( $_SESSION['isAdmin']==='1' || $_SESSION['isGroupAdmin']==='1'){
+if( isAdmin() || isGroupAdmin() ){
   print "あなたは管理者なので，自身が管理するグループ以外も表示しています。";
   $sql = sprintf("select groupId from groupInfo order by year desc, groupName asc");
   $stmt = $pdo->prepare($sql);	 
@@ -23,6 +23,7 @@ while($data= $stmt->fetch(PDO::FETCH_ASSOC)){
 }
 $imax = $i;
 $year_prev = 0;
+$close = 0;
 for($i=0;$i<$imax;$i++){
 
   $sql = sprintf("select groupName, year from groupInfo where groupId = ? ");

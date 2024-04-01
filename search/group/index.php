@@ -11,7 +11,7 @@ $stmt->execute( array( $_SESSION['userId'] ) );
 
 $i=0;
 while($data= $stmt->fetch(PDO::FETCH_ASSOC)){
-  $id[$i] = $data[0];
+  $id[$i] = $data['groupId'];
   $i++;
 }
 $imax = $i;

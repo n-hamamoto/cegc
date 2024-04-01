@@ -4,8 +4,6 @@ include_once("../../conf/config.php");
 include_once("../../auth/login.php");
 include_once("../../lib/dblib.php");
 include_once("../../lib/id.php");
-//権限のない人はログアウト
-requireSubAdmin();
 
 //成績を取得する
 function getNiiMoodleLog($oldflg, $lang, $eptid, $userid, $year){
@@ -186,6 +184,7 @@ function coursePassed($lang, $eptid, $userid, $years){
 
 	include("../../conf/config.php");
 	$passed = 0;
+	$complete_ratio = array();
 
 	foreach($years as $year){
 		//最終テストの成績が設定値以上
