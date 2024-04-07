@@ -140,8 +140,8 @@ function printNiiTrackingLog($oldflg, $pdo, $lang, $title, $eptid, $userid, $yea
     		$empty=0;
 
     		foreach( $ths as $th ){
-			$r[$i][$th['column']] = $result[$th['column']];
-			if( $result[$th['column']] != '' ){
+			$r[$i][$th['column']] = ( $result[$th['column']] ?? "");
+			if( isset($result[$th['column']]) ){
 		 		$tout[$th['column']] = 1;
 			}
     		}
@@ -154,7 +154,7 @@ function printNiiTrackingLog($oldflg, $pdo, $lang, $title, $eptid, $userid, $yea
 	// Table Head
   	$tb = $tb."<tr>";
   	foreach( $ths as $th ){
-      		if($tout[$th['column']] == 1){
+      		if( ($tout[$th['column']] ?? 0) == 1){
               		$tb = $tb."<th>".$th['title']."</th>";
       		}
   	}
@@ -163,7 +163,7 @@ function printNiiTrackingLog($oldflg, $pdo, $lang, $title, $eptid, $userid, $yea
   	for($i=0; $i<$imax; $i++){
     		$tb = $tb."<tr>"; 
     		foreach( $ths as $th ){
-			if($tout[$th['column']] == 1){
+			if( ($tout[$th['column']] ?? 0 ) == 1){
         			$tb = $tb."<td>".$r[$i][$th['column']]."</td>";
 			} 
    		}
