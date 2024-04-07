@@ -28,9 +28,9 @@ function print_score($pdo,$lang,$eptid,$userid,$years){
     		if($data['FinalTest']>=$passingScore and $printPassingStatus == 1){
       			$score = $score."<strong>".htmlspecialchars($data['FinalTest'])."</strong><br>";
     		}else{
-      			$score = $score.htmlspecialchars($data['FinalTest'])."<br>";
+      			$score = $score.htmlspecialchars(($data['FinalTest'] ?? ""))."<br>";
     		}
-    		$examdate=$examdate.htmlspecialchars($data['End'])."<br>";
+    		$examdate=$examdate.htmlspecialchars(($data['End'] ?? ""))."<br>";
   	}
 	}
 	
@@ -42,9 +42,9 @@ function print_score($pdo,$lang,$eptid,$userid,$years){
     		if($data['FinalTest']>=80){
       			$score = $score."<strong>".htmlspecialchars($data['FinalTest'])."</strong><br>";
     		}else{
-      			$score = $score.htmlspecialchars($data['FinalTest'])."<br>";
+      			$score = $score.htmlspecialchars(($data['FinalTest'])?? "")."<br>";
     		}
-    		$examdate=$examdate.htmlspecialchars($data['End'])."<br>";
+    		$examdate=$examdate.htmlspecialchars(($data['End']) ?? "")."<br>";
   	}
 
   	print "<td>";
@@ -181,8 +181,6 @@ for($i=0;$i<$imax;$i++){
 		}
 		print"</td>";
 
-        	//foreach($years as $year){
-  		//print_score($pdo,$lang,$year,$eptid,$id[$i]);
   		print_score($pdo,$lang,$eptid,$id[$i],$years);
 		//}
   	}
