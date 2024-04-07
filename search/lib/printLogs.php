@@ -1,5 +1,8 @@
 <?php
-session_start();
+if(!isset($_SESSION)) 
+{ 
+        session_start(); 
+} 
 include_once("../../conf/config.php");
 include_once("../../auth/login.php");
 include_once("../../lib/dblib.php");
