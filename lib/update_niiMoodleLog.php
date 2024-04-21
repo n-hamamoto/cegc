@@ -2,12 +2,12 @@
 include_once("../lib/printLog.php");
 include_once("../lib/updateDummy.php");
 
-function update_niiMoodleLog($lang, $year, $logtable, $logdb, $eppnDomain, $syncall, $syncdate){
+function update_niiMoodleLog($lang, $year, $logtable, $logdb, $eppnDomain, $syncall, $syncdate, $dry_run){
 
 	//$dry_run = 1;
-	$dry_run = 0;
+	//$dry_run = 0;
 
-	include("../auth/login.php");
+	include("../lib/br.php");
 
 	if($syncall == 1){
                 //syncall=1の時はデータを全部取ってくる
@@ -21,15 +21,15 @@ function update_niiMoodleLog($lang, $year, $logtable, $logdb, $eppnDomain, $sync
         	$executed = $stmt->execute( array( $lang, $year, 'dummy' ) );
         	if($executed){
                 	$data = $stmt->fetch();
-                	$lastupdate = new Datetime($data[0]);
-                	$lastupdate = $lastupdate->format('U');
-			if($lastupdate > 0){
-                		$lastupdate = $lastupdate - 300;//最終更新から5分前のデータを取得対象とする（重複データ削除して再登録）
+                	if(isset($data[0])){
+				$lastupdate = new Datetime($data[0]);
+                		$lastupdate = $lastupdate->format('U');
 			}else{
 				$lastupdate = '';//データが無かったら全データ取得
 			}
-                	//print $lastupdate;
-
+			if($lastupdate > 0){
+                		$lastupdate = $lastupdate - 300;//最終更新から5分前のデータを取得対象とする（重複データ削除して再登録）
+			}
 		}
 		$pdo = null;
 	}elseif($syncall == 2){
@@ -196,7 +196,9 @@ function update_niiMoodleLog($lang, $year, $logtable, $logdb, $eppnDomain, $sync
 		}
 	}
 
-        //アップデート日時登録用のダミーデータを登録
-        updateDummy($logtable, $lang, $year);
+	if( $dry_run == 0){
+        	//アップデート日時登録用のダミーデータを登録
+        	updateDummy($logtable, $lang, $year);
+	}
 }
 ?>

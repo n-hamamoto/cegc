@@ -1,7 +1,7 @@
 <?php
 
 function printLog($in){
-	include_once("../auth/login.php");
+	include("../lib/br.php");
 	echo date('Y-m-d H:i:s');
 	print " $in".$br;
 }

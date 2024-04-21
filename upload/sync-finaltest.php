@@ -7,14 +7,16 @@ require_once("../lib/callReportAPI.php");
 require_once("../lib/update_niiMoodleLog.php");
 require_once("../lib/printLog.php");
 
-//権限のない人はログアウト
-requireSubAdmin();
+if(php_sapi_name() == 'cli'){
+}else{
+	//権限のない人はログアウト
+	requireSubAdmin();
+}
 ?>
 <?php
 
 $logtable = 'niiMoodleLog';
 $lang = array('Ja','En','Kr','Cn');
-$year = '2022';
 
 $pdo = pdo_connect_db($logdb);
 $sql = sprintf("select year from defaultAcademicYear");
@@ -24,6 +26,14 @@ $year = $data['year'];
 $pdo = null;
 
 printLog("sync finaltest start");
+
+if( isset($_POST['dry_run']) ){
+	$dry_run = $_POST['dry_run'];
+}else{
+	$dry_run = 0;
+}
+//$dry_run = 1;// 1: dry_run, 0:本番
+
 
 if( isset($_POST['syncall']) ){
 	$syncall = $_POST['syncall'];
@@ -46,10 +56,11 @@ $pdo = pdo_connect_db($logdb);
 foreach($lang as $l){
 
 	//成績取得&登録
-	update_niiMoodleLog($l, $year, $logtable, $logdb, $eppnDomain, $syncall, $syncdate); 
+	update_niiMoodleLog($l, $year, $logtable, $logdb, $eppnDomain, $syncall, $syncdate,$dry_run); 
 }
 
-if($_SESSION["auth"] === "true"){
+if(php_sapi_name() == 'cli'){}
+else{
 	print'<a href=".">戻る</a>';
 }
 

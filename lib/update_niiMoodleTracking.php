@@ -2,12 +2,12 @@
 include_once("../lib/printLog.php");
 include_once("../lib/updateDummy.php");
 
-function update_niiMoodleTracking($lang, $year, $logtable, $logdb, $eppnDomain, $syncall, $syncdate){
+function update_niiMoodleTracking($lang, $year, $logtable, $logdb, $eppnDomain, $syncall, $syncdate, $dry_run){
 
-	$dry_run = 0;
-	//$dry_run = 1;
+	//$dry_run = 0;
+	$dry_run = 1;
 
-	include("../auth/login.php");
+	include("../lib/br.php");
 
  	$cmids  = array();
         $mnames = array();
@@ -59,12 +59,14 @@ function update_niiMoodleTracking($lang, $year, $logtable, $logdb, $eppnDomain, 
 			$executed = $stmt->execute( array( $lang, $year, $cmid) );
         		if($executed){
                 		$data = $stmt->fetch();
-                		$lastupdate = new Datetime($data[0]);
-                		$lastupdate = $lastupdate->format('U');
-				if($lastupdate > 0 ){
-                			$lastupdate = $lastupdate - 300;//最終更新の5分前のデータを基準にして取得する。
+				if(isset($data[0])){
+                			$lastupdate = new Datetime($data[0]);
+                			$lastupdate = $lastupdate->format('U');
 				}else{
 					$lastupdate = ''; //データがなかったら全データ取得
+				}
+				if($lastupdate > 0 ){
+                			$lastupdate = $lastupdate - 300;//最終更新の5分前のデータを基準にして取得する。
 				}
 			}
 		}elseif($syncall == 1){
@@ -110,7 +112,7 @@ function update_niiMoodleTracking($lang, $year, $logtable, $logdb, $eppnDomain, 
 		$pdo = pdo_connect_db($logdb);
 
 		//テーブルのクリア
-		if($lastupdate == ''){
+		if($syncall == 1){
 			printLog("Clear existing records");
 			if($dry_run == 0){
 			$sql='DELETE FROM '.$logtable.' where lang = ? and year = ? and cmid = ?';
@@ -167,15 +169,18 @@ function update_niiMoodleTracking($lang, $year, $logtable, $logdb, $eppnDomain, 
 				$arg[5] = $t[1]."-".$t[2]."-".$t[3]." ".$t[4].":".$t[5].":".$t[6];
 			}else{
 				$skip = 1;
+				$arg[5] = "none";
 			}
 			//LastAccessをdatetimeにする
 			$patten = '/(\d+)\/(\d+)\/(\d+)\s+(\d+):(\d+):(\d+)/';
         		if(preg_match( $patten, $row[4], $t)){
                 		$arg[6] = "$t[1]-$t[2]-$t[3] $t[4]:$t[5]:$t[6]";
+			}else{
+				$arg[6] = "none";
 			}
 
 	//		var_dump($rowdata);
-			printLog("No. $i: $arg[0], $arg[1], $arg[2], $arg[3], $arg[4], $arg[5], $arg[6] $arg[7]");
+			printLog("No. $i: $arg[0], $arg[1], $arg[2], $arg[3], $arg[4], $arg[5], $arg[6], $arg[7]");
 			if($skip != 0){printLog("skipped");}
 			// 受験を開始していないデータは飛ばす
 			if($skip == 0){
@@ -236,7 +241,9 @@ function update_niiMoodleTracking($lang, $year, $logtable, $logdb, $eppnDomain, 
 		}
 	}
 
-	//アップデート日時登録用のダミーデータを登録
-        updateDummy($logtable, $lang, $year);
+	if($dry_run == 0){
+		//アップデート日時登録用のダミーデータを登録
+        	updateDummy($logtable, $lang, $year);
+	}
 }
 ?>

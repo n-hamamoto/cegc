@@ -1,14 +1,13 @@
 <?php
-  //echo $_SERVER['SERVER_NAME'];
-  //$_SERVER['DOCUMENT_ROOT'];
 
-if($_SESSION["auth"]==="true"){
-  $br = "<br>";
+if(php_sapi_name() == 'cli'){
 }else{
-  $br = "\n";
-  if( headers_sent() ){}else{
+  if($_SESSION["auth"]==="true"){
+  }else{
+    if( headers_sent() ){}else{
 	header("Location: https://".$documentRoot."logout.php");
 	die('unauthorized auth access detected');
+    }
   }
 }
 

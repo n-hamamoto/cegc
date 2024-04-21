@@ -26,6 +26,7 @@ include("../lib/displayUpdate.php");
   <input type="radio" name="syncall" value="1"/>現在のデータを削除して全データを取得<br>
   <input type="radio" name="syncall" value="2"/>指定日以降のデータを取得
   <input type="text" name="syncdate" minlength="8" maxlength="8" size="10" placeholder="YYYYMMDD"><br>
+  <input type="checkbox" name="dry_run" value="1" checked/>テスト実行(登録は行いません)<br>
 <input type="submit" value="登録" />
 </form>
 </div>
@@ -37,6 +38,7 @@ include("../lib/displayUpdate.php");
   <input type="radio" name="syncall" value="1"/>現在のデータを削除して全データを取得<br>
   <input type="radio" name="syncall" value="2"/>指定日以降のデータを取得
   <input type="text" name="syncdate" minlength="8" maxlength="8" size="10" placeholder="YYYYMMDD"><br>
+  <input type="checkbox" name="dry_run" value="1" checked/>テスト実行(登録は行いません)<br>
   <input type="submit" value="登録" />
 </form>
 </div>
