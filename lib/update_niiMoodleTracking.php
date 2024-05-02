@@ -5,7 +5,7 @@ include_once("../lib/updateDummy.php");
 function update_niiMoodleTracking($lang, $year, $logtable, $logdb, $eppnDomain, $syncall, $syncdate, $dry_run){
 
 	//$dry_run = 0;
-	$dry_run = 1;
+	//$dry_run = 1;
 
 	include("../lib/br.php");
 
@@ -231,6 +231,7 @@ function update_niiMoodleTracking($lang, $year, $logtable, $logdb, $eppnDomain, 
 				if($dry_run == 0){
 					try{
 						$executed = $stmt->execute(array($arg[0], $arg[1], $arg[2], $arg[3], $arg[4], $arg[5], $arg[6], $arg[7]));
+						printLog("$sql, @arg");
 					} catch (Exception $e){
 						print('Import Error:'.$e->getMessage());
 						die();
